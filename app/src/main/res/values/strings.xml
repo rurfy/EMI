@@ -1,3 +1,11 @@
 <resources>
     <string name="app_name">EMI</string>
+    <string name="id">Ticketnummer</string>
+    <string name="title">Titel</string>
+    <string name="problem">Problembeschreibung</string>
+    <string name="category">Kategorie</string>
+    <string name="status">Status</string>
+    <string name="date">Datum</string>
+    <string name="createTicket">Ticket erstellen</string>
+    <string name="allTickets">Alle Tickets</string>
 </resources>
