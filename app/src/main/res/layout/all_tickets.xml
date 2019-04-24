@@ -32,6 +32,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="16dp"
+        android:entries="@array/spinnerCategories"
         app:layout_constraintBottom_toBottomOf="@+id/filter"
         app:layout_constraintLeft_toRightOf="@+id/filter"
         app:layout_constraintTop_toTopOf="@+id/filter" />
@@ -59,7 +60,7 @@
         android:id="@+id/date_caption"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="128dp"
+        android:layout_marginStart="96dp"
         android:text="Datum"
         app:layout_constraintStart_toEndOf="@+id/title_caption"
         app:layout_constraintTop_toTopOf="@+id/title_caption" />
@@ -85,5 +86,14 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/line" />
+
+    <TextView
+        android:id="@+id/status_caption"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:text="Status"
+        app:layout_constraintStart_toEndOf="@+id/date_caption"
+        app:layout_constraintTop_toTopOf="@+id/date_caption" />
 
 </android.support.constraint.ConstraintLayout>
