@@ -42,10 +42,10 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="32dp"
-        android:layout_marginTop="48dp"
+        android:layout_marginTop="32dp"
         android:text="ID"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/filter" />
+        app:layout_constraintTop_toBottomOf="@+id/filter2" />
 
     <TextView
         android:id="@+id/title_caption"
@@ -95,5 +95,21 @@
         android:text="Status"
         app:layout_constraintStart_toEndOf="@+id/date_caption"
         app:layout_constraintTop_toTopOf="@+id/date_caption" />
+
+    <TextView
+        android:id="@+id/filter2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="TextView"
+        app:layout_constraintStart_toStartOf="@id/filter"
+        app:layout_constraintTop_toBottomOf="@+id/filter" />
+
+    <Spinner
+        android:id="@+id/filterTypes2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="@id/filterTypes"
+        app:layout_constraintTop_toTopOf="@+id/filter2" />
 
 </android.support.constraint.ConstraintLayout>
