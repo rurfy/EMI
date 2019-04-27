@@ -20,7 +20,7 @@ public class EditTicket extends AppCompatActivity {
 
         Button buttonCreate;
         Button buttonCancel;
-        EditText inputTitel;
+        EditText inputTitle;
         EditText inputCreator;
         EditText inputProblem;
         Spinner spinnerCategory;
@@ -30,66 +30,98 @@ public class EditTicket extends AppCompatActivity {
             super.onCreate(savedInstanceState);
             setContentView(R.layout.show_ticket);
 
+            //##################### Testdaten #########################
+
+            // TODO getKategories() -> String[][]
+            final String[][] categoriesArray = new String[3][2];
+            categoriesArray[0][0] = "2";
+            categoriesArray[0][1] = "test";
+            categoriesArray[1][0] = "5";
+            categoriesArray[1][1] = "test2";
+
+
+            Map ticketDataMap = new HashMap();
+            ticketDataMap.put("Titel", "TestTitel");
+            ticketDataMap.put("Ersteller", "Marie Berger");
+            ticketDataMap.put("Problembeschreibung", "ist kaputt");
+            ticketDataMap.put("Kategorie", "2");
+
+            //#########################################################
+
+
+            // Buttons Bezeichnung zuweisen
             buttonCreate = (Button)findViewById(R.id.buttonLeft);
             buttonCreate.setText(R.string.ok);
             buttonCancel = (Button) findViewById(R.id.buttonRight);
             buttonCancel.setText(R.string.cancel);
 
 
-            // TODO getKategories() -> String[][]
-            final String[][] test2 = new String[3][2];
-            test2[0][0] = "2";
-            test2[0][1] = "test";
-            test2[1][0] = "5";
-            test2[1][1] = "test2";
+            // TODO getKategorien() -> String[][]
 
-            List<String> test = new ArrayList<String>();
+            // Liste für DropDown befüllen
+            List<String> categoriesList = new ArrayList<String>();
+            for (int i = 0; i<categoriesArray.length; i++) {
 
-            for (int i = 0; i<test2.length; i++) {
-
-                test.add(test2[i][1]);
+                if (categoriesArray[i][1] == null) {
+                    break;
+                } else {
+                    categoriesList.add(categoriesArray[i][1]);
+                }
             }
-            // Drop-Down-Liste füllen
+            // Drop-Down-Menü füllen
             spinnerCategory = (Spinner) findViewById(R.id.spinnerCategory);
-            ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, test);
+            ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, categoriesList);
             adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
             spinnerCategory.setAdapter(adapter);
+            for (int i = 0; i < categoriesArray.length; i++) {
+
+                if (categoriesArray[i][0].equals((ticketDataMap.get("Kategorie").toString()))) {
+                    spinnerCategory.setSelection(i);
+                    break;
+                }
+            }
 
 
             // TODO getTicket(id) -> Hashmap;
-            // Testmap
-            Map ticketData = new HashMap();
-            ticketData.put("Titel", "TestTitel");
-            ticketData.put("Ersteller", "Marie Berger");
-            ticketData.put("Problembeschreibung", "ist kaputt");
+
 
             // Werte aus der DB in die Felder eintragen
-            inputTitel = (EditText)findViewById(R.id.textInputEditTextTitel);
-            inputTitel.setText(ticketData.get("Titel").toString());
-            inputCreator = (EditText)findViewById(R.id.textInputEditTextTitel);
-            inputCreator.setText(ticketData.get("Ersteller").toString());
-            inputProblem = (EditText)findViewById(R.id.textInputEditTextTitel);
-            inputProblem.setText(ticketData.get("Problembeschreibung").toString());
-
-
+            inputTitle = (EditText)findViewById(R.id.textInputEditTextTitle);
+            inputTitle.setText(ticketDataMap.get("Titel").toString());
+            inputCreator = (EditText)findViewById(R.id.textInputEditTextTitle);
+            inputCreator.setText(ticketDataMap.get("Ersteller").toString());
+            inputProblem = (EditText)findViewById(R.id.textInputEditTextTitle);
+            inputProblem.setText(ticketDataMap.get("Problembeschreibung").toString());
 
             buttonCreate.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    inputTitel = (EditText)findViewById(R.id.textInputEditTextTitel);
+
+                    // Daten aus den Feldern auslesen
+                    inputTitle = (EditText)findViewById(R.id.textInputEditTextTitle);
                     inputCreator = (EditText)findViewById(R.id.textInputEditTextCreator);
                     inputProblem = (EditText)findViewById(R.id.textInputEditTextProblem);
 
+                    // Position der ID aus der DB zuordnen
                     int categoryPosition = spinnerCategory.getSelectedItemPosition();
-                    String categoryId = test2[categoryPosition][0];
+                    String categoryId = categoriesArray[categoryPosition][0];
 
-
+                    // aktuelles Datum holen
                     SimpleDateFormat formatter = new SimpleDateFormat("yyyy-mm-dd");
                     Date currentDate = new Date();
                     String date = formatter.format(currentDate);
-                    Log.d("Date", date);
 
-                    //
+                    Map <String, Object> ticketDataMap = new HashMap<String, Object>();
+                    ticketDataMap.put("Titel", inputTitle);
+                    //ticketDataMap.put("Ersteller", inputCreator);
+                    ticketDataMap.put("Problembeschreibung", inputProblem);
+                    ticketDataMap.put("Datum", date);
+                    // TODO Status
+                    // TODO DB Kategorie
+                    //ticketDataMap.put("Kategorie", categoryId);
+
+                    // TODO setTicket(ticketDataMap) -> boolean
+
                 }
             });
         }
