@@ -11,170 +11,157 @@
         layout="@layout/rahmen"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        app:layout_constraintBottom_toTopOf="@id/linearLayoutButtons"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <Button
-        android:id="@+id/buttonErstellen"
-        android:layout_width="wrap_content"
-        android:layout_height="45dp"
-        android:layout_margin="5dp"
-        android:layout_marginStart="1dp"
-        android:layout_marginTop="5dp"
-        android:layout_marginEnd="1dp"
-        android:layout_marginBottom="5dp"
-        android:width="45dp"
-        android:height="45dp"
-        android:text="Ok"
-        app:layout_constraintBottom_toTopOf="@+id/scrollView2"
-        app:layout_constraintEnd_toStartOf="@+id/buttonAbbrechen"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/rahmen" />
-
-    <Button
-        android:id="@+id/buttonAbbrechen"
-        android:layout_width="wrap_content"
-        android:layout_height="45dp"
-        android:layout_margin="5dp"
-        android:layout_marginStart="1dp"
-        android:layout_marginTop="5dp"
-        android:layout_marginEnd="1dp"
-        android:layout_marginBottom="5dp"
-        android:width="45dp"
-        android:height="45dp"
-        android:text="Cancel"
-        app:layout_constraintBottom_toTopOf="@+id/scrollView2"
+    <LinearLayout
+        android:id="@+id/linearLayoutButtons"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toTopOf="@+id/scrollView"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.964"
-        app:layout_constraintStart_toEndOf="@+id/buttonErstellen"
-        app:layout_constraintTop_toBottomOf="@+id/rahmen" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/rahmen">
+
+        <Button
+            android:id="@+id/buttonLeft"
+            android:layout_width="wrap_content"
+            android:layout_height="45dp"
+            android:layout_marginEnd="20dp"
+            android:layout_weight="1"
+            android:width="45dp"
+            android:height="45dp"
+            android:lines="1" />
+
+        <Button
+            android:id="@+id/buttonRight"
+            android:layout_width="wrap_content"
+            android:layout_height="45dp"
+            android:layout_marginStart="20dp"
+            android:layout_weight="1"
+            android:width="45dp"
+            android:height="45dp"
+            android:lines="1"
+            app:layout_constraintHorizontal_bias="0.964" />
+    </LinearLayout>
 
     <ScrollView
-        android:id="@+id/scrollView2"
-        android:layout_width="400dp"
-        android:layout_height="600dp"
-        android:layout_margin="5dp"
-        android:layout_marginStart="5dp"
-        android:layout_marginTop="5dp"
-        android:layout_marginEnd="5dp"
-        android:layout_marginBottom="5dp"
+        android:id="@+id/scrollView"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:padding="5dp"
         android:visibility="visible"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/buttonErstellen">
+        app:layout_constraintTop_toBottomOf="@id/linearLayoutButtons">
 
         <LinearLayout
+            android:id="@+id/linearLayoutTicket"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
             <TextView
-                android:id="@+id/textViewErsteller"
-                android:layout_width="200dp"
-                android:layout_height="25dp"
-                android:layout_marginLeft="30dp"
-                android:layout_marginTop="10dp"
-                android:layout_marginRight="30dp"
-                tools:layout_editor_absoluteX="43dp"
-                tools:layout_editor_absoluteY="92dp"
-                tools:text="Ersteller" />
+                android:id="@+id/textViewTitle"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp"
+                android:text="@string/title" />
 
             <android.support.design.widget.TextInputLayout
-                android:id="@+id/TextInputLayout_Ersteller"
-                android:layout_width="300dp"
-                android:layout_height="50dp"
-                android:layout_marginLeft="30dp"
-                android:layout_marginTop="5dp"
-                android:layout_marginRight="30dp"
-                tools:layout_editor_absoluteX="43dp"
-                tools:layout_editor_absoluteY="112dp">
+                android:id="@+id/textInputLayoutTitle"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_marginBottom="5dp"
+                android:layout_weight="1"
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp">
 
                 <android.support.design.widget.TextInputEditText
-                    android:id="@+id/in_txt_ersteller"
+                    android:id="@+id/textInputEditTextTitle"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:inputType="text"
-                    android:minWidth="200dp"
-                    android:selectAllOnFocus="false"
-                    android:singleLine="false"
-                    android:visibility="visible" />
+                    android:layout_height="wrap_content" />
             </android.support.design.widget.TextInputLayout>
 
             <TextView
-                android:id="@+id/textViewTitel"
-                android:layout_width="200dp"
-                android:layout_height="25dp"
-                android:layout_marginLeft="30dp"
+                android:id="@+id/textViewCreator"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
                 android:layout_marginTop="10dp"
-                android:layout_marginRight="30dp"
-                tools:layout_editor_absoluteX="43dp"
-                tools:layout_editor_absoluteY="176dp"
-                tools:text="Titel" />
+                android:layout_weight="1"
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp"
+                android:text="@string/creator" />
 
             <android.support.design.widget.TextInputLayout
-                android:id="@+id/TextInputLayoutTitel"
-                android:layout_width="300dp"
-                android:layout_height="50dp"
-                android:layout_marginLeft="30dp"
-                android:layout_marginTop="5dp"
-                android:layout_marginRight="30dp"
-                tools:layout_editor_absoluteX="43dp"
-                tools:layout_editor_absoluteY="195dp">
+                android:id="@+id/textInputLayoutCreator"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_marginBottom="5dp"
+                android:layout_weight="1"
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp">
 
                 <android.support.design.widget.TextInputEditText
+                    android:id="@+id/textInputEditTextCreator"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent" />
+                    android:layout_height="wrap_content" />
             </android.support.design.widget.TextInputLayout>
 
             <TextView
-                android:id="@+id/textViewKategorie"
-                android:layout_width="200dp"
-                android:layout_height="25dp"
-                android:layout_marginLeft="30dp"
+                android:id="@+id/textViewCategory"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
                 android:layout_marginTop="10dp"
-                android:layout_marginRight="30dp"
-                tools:text="Kategorie" />
+                android:layout_weight="1"
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp"
+                android:text="@string/category" />
 
             <Spinner
-                android:id="@+id/spinnerKategorie"
-                android:layout_width="300dp"
-                android:layout_height="50dp"
-                android:layout_marginStart="30dp"
-                android:layout_marginTop="5dp"
-                android:spinnerMode="dropdown" />
+                android:id="@+id/spinnerCategory"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_marginBottom="5dp"
+                android:layout_weight="1"
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp"
+                android:spinnerMode="dropdown"
+                tools:layout_editor_absoluteX="56dp"
+                tools:layout_editor_absoluteY="268dp" />
 
             <TextView
-                android:id="@+id/textViewProblembeschreibung"
-                android:layout_width="200dp"
-                android:layout_height="25dp"
-                android:layout_marginLeft="30dp"
+                android:id="@+id/textViewProblem"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
                 android:layout_marginTop="10dp"
-                android:layout_marginRight="30dp"
-                tools:layout_editor_absoluteX="43dp"
-                tools:layout_editor_absoluteY="266dp"
-                tools:text="Problembeschreibung" />
+                android:layout_weight="1"
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp"
+                android:text="@string/problem" />
 
             <android.support.design.widget.TextInputLayout
-                android:id="@+id/TextInputProblembeschreibung"
-                android:layout_width="300dp"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="30dp"
-                android:layout_marginTop="5dp"
-                android:layout_marginRight="30dp"
-                android:minHeight="200dp"
-                tools:layout_editor_absoluteX="43dp"
-                tools:layout_editor_absoluteY="285dp">
+                android:id="@+id/textInputLayoutProblem"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_marginBottom="5dp"
+                android:layout_weight="1"
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp">
 
                 <android.support.design.widget.TextInputEditText
+                    android:id="@+id/textInputEditTextProblem"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:inputType="textLongMessage"
+                    android:layout_height="wrap_content"
                     android:lines="10"
-                    android:minHeight="200dp"
-                    android:minLines="10" />
-
+                    android:textColor="@color/colorPrimaryDark" />
             </android.support.design.widget.TextInputLayout>
 
         </LinearLayout>
