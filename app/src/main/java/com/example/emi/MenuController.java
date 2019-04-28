@@ -1,5 +1,6 @@
 package com.example.emi;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
@@ -21,6 +22,8 @@ public class MenuController extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
+                Intent toCreatePage = new Intent(MenuController.this, CreateTicket.class);
+                startActivity(toCreatePage);
 
             }
         });
@@ -28,6 +31,9 @@ public class MenuController extends AppCompatActivity {
         allTickets.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+                Intent toAllTicketsPage = new Intent(MenuController.this, All_tickets.class);
+                startActivity(toAllTicketsPage);
 
             }
         });
