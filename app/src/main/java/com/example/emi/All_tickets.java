@@ -20,7 +20,7 @@ public class All_tickets extends AppCompatActivity {
         house.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent backToHome = new Intent(All_tickets.this, MainActivity.class);
+                Intent backToHome = new Intent(All_tickets.this, MenuController.class);
                 startActivity(backToHome);
             }
         });
