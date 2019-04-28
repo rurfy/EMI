@@ -18,7 +18,7 @@
 
     <LinearLayout
         android:id="@+id/linearLayoutButtons"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         app:layout_constraintBottom_toTopOf="@+id/scrollView"
@@ -70,7 +70,6 @@
                 android:id="@+id/textViewTitle"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-                android:layout_marginTop="5dp"
                 android:layout_weight="1"
                 android:paddingLeft="10dp"
                 android:paddingRight="10dp"
@@ -80,7 +79,8 @@
                 android:id="@+id/textInputLayoutTitle"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-                android:layout_weight="2"
+                android:layout_marginBottom="5dp"
+                android:layout_weight="1"
                 android:paddingLeft="10dp"
                 android:paddingRight="10dp">
 
@@ -94,7 +94,7 @@
                 android:id="@+id/textViewCreator"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-                android:layout_marginTop="5dp"
+                android:layout_marginTop="10dp"
                 android:layout_weight="1"
                 android:paddingLeft="10dp"
                 android:paddingRight="10dp"
@@ -104,7 +104,8 @@
                 android:id="@+id/textInputLayoutCreator"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-                android:layout_weight="2"
+                android:layout_marginBottom="5dp"
+                android:layout_weight="1"
                 android:paddingLeft="10dp"
                 android:paddingRight="10dp">
 
@@ -118,7 +119,7 @@
                 android:id="@+id/textViewCategory"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-                android:layout_marginTop="5dp"
+                android:layout_marginTop="10dp"
                 android:layout_weight="1"
                 android:paddingLeft="10dp"
                 android:paddingRight="10dp"
@@ -128,7 +129,7 @@
                 android:id="@+id/spinnerCategory"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-                android:layout_margin="5dp"
+                android:layout_marginBottom="5dp"
                 android:layout_weight="1"
                 android:paddingLeft="10dp"
                 android:paddingRight="10dp"
@@ -140,7 +141,7 @@
                 android:id="@+id/textViewProblem"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-                android:layout_marginTop="5dp"
+                android:layout_marginTop="10dp"
                 android:layout_weight="1"
                 android:paddingLeft="10dp"
                 android:paddingRight="10dp"
@@ -150,7 +151,8 @@
                 android:id="@+id/textInputLayoutProblem"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-                android:layout_weight="2"
+                android:layout_marginBottom="5dp"
+                android:layout_weight="1"
                 android:paddingLeft="10dp"
                 android:paddingRight="10dp">
 
@@ -158,7 +160,8 @@
                     android:id="@+id/textInputEditTextProblem"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:lines="10" />
+                    android:lines="10"
+                    android:textColor="@color/colorPrimaryDark" />
             </android.support.design.widget.TextInputLayout>
 
         </LinearLayout>
