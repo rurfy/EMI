@@ -1,5 +1,7 @@
 package com.example.emi;
 
+import android.util.Log;
+
 import com.loopj.android.http.*;
 
 public class APIConnector {
@@ -12,6 +14,8 @@ public class APIConnector {
     }
 
     public static void post(String url, RequestParams params, AsyncHttpResponseHandler responseHandler) {
+        client.addHeader("Accept", "application/json");
+        client.addHeader("Content-type", "application/json");
         client.post(getAbsoluteUrl(url), params, responseHandler);
     }
 
