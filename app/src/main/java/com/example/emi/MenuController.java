@@ -3,9 +3,11 @@ package com.example.emi;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 
 public class MenuController extends AppCompatActivity {
@@ -22,8 +24,16 @@ public class MenuController extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                Intent toCreatePage = new Intent(MenuController.this, CreateTicket.class);
-                startActivity(toCreatePage);
+
+                JSONArray array = RestUsage.getAllItems("Ticket");
+                if (array != null) {
+                    Log.e("Test123", "Hallo");
+                }
+
+                RestUsage.postOneItem();
+
+                //Intent toCreatePage = new Intent(MenuController.this, CreateTicket.class);
+                //startActivity(toCreatePage);
 
             }
         });
