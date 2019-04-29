@@ -8,6 +8,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.TextView;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -25,6 +26,8 @@ public class CreateTicket extends AppCompatActivity {
         EditText inputCreator;
         EditText inputProblem;
         Spinner spinnerCategory;
+        TextView textViewStatus;
+        Spinner spinnerStatus;
 
         @Override
         protected void onCreate(Bundle savedInstanceState) {
@@ -61,15 +64,31 @@ public class CreateTicket extends AppCompatActivity {
             }
             // Drop-Down-Menü füllen
             spinnerCategory = (Spinner) findViewById(R.id.spinnerCategory);
-            ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, categoriesList);
-            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-            spinnerCategory.setAdapter(adapter);
+            ArrayAdapter<String> categoryAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, categoriesList);
+            categoryAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+            spinnerCategory.setAdapter(categoryAdapter);
+
+
+
+            // TODO getStatus() -> String[][]
+            // Liste für DropDown befüllen
+            List<String> statusList = new ArrayList<String>();
+            statusList.add("nicht begonnen");
+            statusList.add("in Bearbeitung");
+            statusList.add("beendet");
+
+            // Drop-Down-Menü füllen
+            spinnerStatus = (Spinner) findViewById(R.id.spinnerStatus);
+            ArrayAdapter<String> statusAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, statusList);
+            statusAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+            spinnerStatus.setAdapter(statusAdapter);
 
 
 
             buttonCreate.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    Map <String, Object> ticketDataMap = new HashMap<String, Object>();
 
                     // Daten aus den Feldern auslesen
                     inputTitle = (EditText)findViewById(R.id.textInputEditTextTitle);
@@ -80,21 +99,39 @@ public class CreateTicket extends AppCompatActivity {
                     int categoryPosition = spinnerCategory.getSelectedItemPosition();
                     String categoryId = categoriesArray[categoryPosition][0];
 
+                    String status = spinnerStatus.getSelectedItem().toString();
+                    switch (status) {
+                        case "nicht begonnen": {
+                            ticketDataMap.put("StatusID", "50");
+                            break;
+                        }
+                        case "in Bearbeitung": {
+                            ticketDataMap.put("StatusID", "100");
+                            break;
+                        }
+                        case "beendet": {
+                            ticketDataMap.put("StatusID", "1000");
+                            break;
+                        }
+                    }
+
                     // aktuelles Datum holen
                     SimpleDateFormat formatter = new SimpleDateFormat("yyyy-mm-dd");
                     Date currentDate = new Date();
                     String date = formatter.format(currentDate);
 
-                    Map <String, Object> ticketDataMap = new HashMap<String, Object>();
+
                     ticketDataMap.put("Titel", inputTitle);
                     //ticketDataMap.put("Ersteller", inputCreator);
                     ticketDataMap.put("Problembeschreibung", inputProblem);
                     ticketDataMap.put("Datum", date);
-                    // TODO Status
+
                     // TODO DB Kategorie
                     //ticketDataMap.put("Kategorie", categoryId);
 
                     // TODO setTicket(ticketDataMap) -> boolean
+
+
 
                 }
             });
