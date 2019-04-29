@@ -43,4 +43,19 @@ public class Utils {
 
         return hashMap;
     }
+
+    public static String[][] jsonArraytoStingArray(JSONArray jsonArray, String attribute) {
+        int size = jsonArray.length();
+        String[][] stringArray = new String[size][2];
+
+        for (int i = 0; i < jsonArray.length(); i++) {
+            try {
+                stringArray[i][0] = (jsonArray.getJSONObject(i)).getString("ID");
+                stringArray[i][1] = (jsonArray.getJSONObject(i)).getString(attribute);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+        return stringArray;
+    }
 }
