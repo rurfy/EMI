@@ -1,5 +1,6 @@
 package com.example.emi;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -9,6 +10,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.loopj.android.http.JsonHttpResponseHandler;
 
@@ -50,6 +52,8 @@ public class CreateTicket extends AppCompatActivity {
             buttonCancel = (Button) findViewById(R.id.buttonRight);
             buttonCancel.setText(R.string.cancel);
 
+
+            //Status aus der DB lesen und sowohl in den Spinner, als auch in eine ArrayList schreiben
             APIConnector.get("Status", null, new JsonHttpResponseHandler() {
 
                 @Override
@@ -72,6 +76,8 @@ public class CreateTicket extends AppCompatActivity {
                 }
             });
 
+
+            //Kategorien aus der DB lesen und sowohl in den Spinner, als auch in eine ArrayList schreiben
             APIConnector.get("Kategorie", null, new JsonHttpResponseHandler() {
 
                 @Override
@@ -94,18 +100,19 @@ public class CreateTicket extends AppCompatActivity {
                 }
             });
 
+            // Input Felder mit der xml-Datei verknüpft
+            inputTitle = (EditText)findViewById(R.id.textInputEditTextTitle);
+            inputProblem = (EditText)findViewById(R.id.textInputEditTextProblem);
+
 
             //Wird ausgeführt wenn der Nutzer den OK-Button drückt
             buttonCreate.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Log.e("Test123", "Es geht weiter");
-                    HashMap <String, String> ticketDataMap = new HashMap<>();
+                    Log.e(CreateTicket.this.getLocalClassName(), "Der OK Button wurde benutzt.");
 
-                    // Daten aus den Feldern auslesen
-                    inputTitle = (EditText)findViewById(R.id.textInputEditTextTitle);
-                    //inputCreator = (EditText)findViewById(R.id.textInputEditTextCreator);
-                    inputProblem = (EditText)findViewById(R.id.textInputEditTextProblem);
+                    //Lokale HashMap zur Speicherung der eingegebenen Daten
+                    HashMap <String, String> ticketDataMap = new HashMap<>();
 
                     //Eingaben auslesen und in String speichern
                     String title = inputTitle.getText().toString();
@@ -134,21 +141,54 @@ public class CreateTicket extends AppCompatActivity {
                         }
                     }
 
+                    if (title.equals("")) {
+                        Toast.makeText(CreateTicket.this, "Bitte geben Sie einen Titel für das Ticket ein.",
+                                Toast.LENGTH_LONG).show();
+                    }
+                    else if (problem.equals("")) {
+                        Toast.makeText(CreateTicket.this, "Bitte geben Sie eine Problembeschreibung ein.",
+                                Toast.LENGTH_LONG).show();
+                    }
+                    else {
 
-                    //Daten in die Hashmap schreiben
-                    ticketDataMap.put("Titel", title);
-                    ticketDataMap.put("Datum", datum);
-                    ticketDataMap.put("Problembeschreibung", problem);
-                    ticketDataMap.put("StatusID", statID);
-                    ticketDataMap.put("KategorieID", catID);
+                        //Daten in die Hashmap schreiben
+                        ticketDataMap.put("Titel", title);
+                        ticketDataMap.put("Datum", datum);
+                        ticketDataMap.put("Problembeschreibung", problem);
+                        ticketDataMap.put("StatusID", statID);
+                        ticketDataMap.put("KategorieID", catID);
 
 
-                    //Das einzufügende JSONObject wird mit den Daten befüllt und in die entsprechende Tabelle geladen
-                    JSONObject postObject = Utils.prepareDataForPost(ticketDataMap);
-                    RestUsage.postOneItem(postObject,"Ticket");
+                        //Das einzufügende JSONObject wird mit den Daten befüllt und in die entsprechende Tabelle geladen
+                        JSONObject postObject = Utils.prepareDataForPost(ticketDataMap);
+                        RestUsage.postOneItem(postObject,"Ticket", CreateTicket.this);
+
+                        //Intent backToMenu = new Intent(CreateTicket.this, MenuController.class);
+                        //startActivity(backToMenu);
+
+                    }
+
+                }
+            });
+
+            //Wird aufgerufen wenn der Cancel-Button betätigt wird
+            buttonCancel.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                    //Die Inputfelder werden zurückgesetzt
+                    inputProblem.setText("");
+                    inputTitle.setText("");
+
+                    //Nutzerausgabe, dass abgebrochen wurde
+                    Toast.makeText(CreateTicket.this, "Die Erstellung des Tickets wurde abgebrochen",
+                            Toast.LENGTH_LONG);
+
                 }
             });
         }
+
+
 
 }
 

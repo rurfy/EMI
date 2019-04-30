@@ -22,6 +22,9 @@ public class APIConnector {
         client.get(getAbsoluteUrl(url,id), params, responseHandler);
     }
 
+    //JSONObject welches eingefügt werden soll, entspricht der StringEntity
+    //Das Object wird in der RestUsage Klasse übergeben und umgewandelt
+    //Context kann immer null sein, und ContentType wird automatisch gesetzt
     public static void post(Context context, String url, StringEntity entity, String contentType, AsyncHttpResponseHandler responseHandler) {
         client.addHeader("Accept", "application/json");
         client.addHeader("Content-type", "application/json");
