@@ -6,123 +6,138 @@ import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.LinearLayout;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.Spinner;
+
+import com.loopj.android.http.JsonHttpResponseHandler;
+
+import org.json.JSONArray;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import cz.msebera.android.httpclient.Header;
+
 public class EditTicket extends AppCompatActivity {
 
-        Button buttonCreate;
-        Button buttonCancel;
-        EditText inputTitle;
-        EditText inputCreator;
-        EditText inputProblem;
-        Spinner spinnerCategory;
-
-        @Override
-        protected void onCreate(Bundle savedInstanceState) {
-            super.onCreate(savedInstanceState);
-            setContentView(R.layout.show_ticket);
-
-            //##################### Testdaten #########################
-
-            // TODO getKategories() -> String[][]
-            final String[][] categoriesArray = new String[3][2];
-            categoriesArray[0][0] = "2";
-            categoriesArray[0][1] = "test";
-            categoriesArray[1][0] = "5";
-            categoriesArray[1][1] = "test2";
+    Button buttonCreate;
+    Button buttonCancel;
+    EditText inputTitle;
+    EditText inputCreator;
+    EditText inputProblem;
+    CheckBox checkBox;
+    Spinner spinnerStatus;
+    LinearLayout checkBoxContainer;
+    ArrayList<CheckBox> checkBoxesCategories;
+    ArrayList<HashMap<String, String>> statusList;
 
 
-            Map ticketDataMap = new HashMap();
-            ticketDataMap.put("Titel", "TestTitel");
-            ticketDataMap.put("Ersteller", "Marie Berger");
-            ticketDataMap.put("Problembeschreibung", "ist kaputt");
-            ticketDataMap.put("Kategorie", "2");
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.show_ticket);
 
-            //#########################################################
-
-
-            // Buttons Bezeichnung zuweisen
-            buttonCreate = (Button)findViewById(R.id.buttonLeft);
-            buttonCreate.setText(R.string.ok);
-            buttonCancel = (Button) findViewById(R.id.buttonRight);
-            buttonCancel.setText(R.string.cancel);
+        inputTitle = (EditText) findViewById(R.id.textInputEditTextTitle);
+        inputProblem = (EditText) findViewById(R.id.textInputEditTextProblem);
+        //inputCreator = (EditText)findViewById(R.id.textInputEditTextTitle);
+        spinnerStatus = (Spinner) findViewById(R.id.spinnerStatus);
+        checkBoxContainer = (LinearLayout) findViewById(R.id.linLayCheckBoxes);
 
 
-            // TODO getKategorien() -> String[][]
+        // Buttons Bezeichnung zuweisen
+        buttonCreate = (Button) findViewById(R.id.buttonLeft);
+        buttonCreate.setText(R.string.ok);
+        buttonCancel = (Button) findViewById(R.id.buttonRight);
+        buttonCancel.setText(R.string.cancel);
 
-            // Liste für DropDown befüllen
-            List<String> categoriesList = new ArrayList<String>();
-            for (int i = 0; i<categoriesArray.length; i++) {
 
-                if (categoriesArray[i][1] == null) {
-                    break;
-                } else {
-                    categoriesList.add(categoriesArray[i][1]);
-                }
+        APIConnector.get("Status", null, new JsonHttpResponseHandler() {
+
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
+                super.onSuccess(statusCode, headers, response);
+
+                statusList = Utils.jsonToArrayListHash(response);
+
+                TicketController.setDropDownStatusContent(spinnerStatus, EditTicket.this, statusList);
+
+
+                APIConnector.getOne("Ticket", null, 1, new JsonHttpResponseHandler() {
+                    @Override
+                    public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
+
+                        super.onSuccess(statusCode, headers, response);
+                        HashMap<String, String> ticketDataMap = Utils.jsonToArrayListHash(response).get(0);
+
+                        TicketController.setStaticContent(inputTitle, inputProblem, ticketDataMap, true);
+                        TicketController.setSelectedStatus(spinnerStatus, ticketDataMap, statusList);
+
+                        APIConnector.get("Ticket_hat_Kategorie/1/TicketID", null, new JsonHttpResponseHandler() {
+                            @Override
+                            public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
+
+                                super.onSuccess(statusCode, headers, response);
+
+                                final ArrayList<String> selectedCategories = Utils.jsonToArrayListString(response, "KategorieID");
+
+                                APIConnector.get("Kategorie", null, new JsonHttpResponseHandler() {
+
+                                    @Override
+                                    public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
+
+
+                                        super.onSuccess(statusCode, headers, response);
+
+                                        HashMap<String, String> categoriesHashMap = Utils.jsonArraytoHashMap(response);
+
+
+                                        checkBoxesCategories = TicketController.setSelectedCategoriesCheckBox(checkBoxContainer, EditTicket.this, categoriesHashMap, selectedCategories);
+                                        int x = checkBoxesCategories.size();
+                                        Log.e("Size", Integer.toString(x));
+
+                                    }
+                                });
+                            }
+                        });
+                    }
+                });
             }
-            // Drop-Down-Menü füllen
-            spinnerCategory = (Spinner) findViewById(R.id.spinnerCategory);
-            ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, categoriesList);
-            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-            spinnerCategory.setAdapter(adapter);
-            for (int i = 0; i < categoriesArray.length; i++) {
+        });
 
-                if (categoriesArray[i][0].equals((ticketDataMap.get("Kategorie").toString()))) {
-                    spinnerCategory.setSelection(i);
-                    break;
-                }
+
+        buttonCreate.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                HashMap<String, String> ticketDataMap = TicketController.getStaticContent(inputTitle, inputProblem);
+                String statID = TicketController.getStatus(spinnerStatus, statusList);
+                ticketDataMap.put("StatusID", statID);
+
+                ArrayList<String> selectedCategories = TicketController.getSelectedCategories(checkBoxesCategories);
+
+
+                //TODO Status
+                // TODO Update Ticket in DB
+
             }
+        });
+
+        buttonCancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
 
 
-            // TODO getTicket(id) -> Hashmap;
-
-
-            // Werte aus der DB in die Felder eintragen
-            inputTitle = (EditText)findViewById(R.id.textInputEditTextTitle);
-            inputTitle.setText(ticketDataMap.get("Titel").toString());
-            inputCreator = (EditText)findViewById(R.id.textInputEditTextTitle);
-            inputCreator.setText(ticketDataMap.get("Ersteller").toString());
-            inputProblem = (EditText)findViewById(R.id.textInputEditTextTitle);
-            inputProblem.setText(ticketDataMap.get("Problembeschreibung").toString());
-
-            buttonCreate.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-
-                    // Daten aus den Feldern auslesen
-                    inputTitle = (EditText)findViewById(R.id.textInputEditTextTitle);
-                    inputCreator = (EditText)findViewById(R.id.textInputEditTextCreator);
-                    inputProblem = (EditText)findViewById(R.id.textInputEditTextProblem);
-
-                    // Position der ID aus der DB zuordnen
-                    int categoryPosition = spinnerCategory.getSelectedItemPosition();
-                    String categoryId = categoriesArray[categoryPosition][0];
-
-                    // aktuelles Datum holen
-                    SimpleDateFormat formatter = new SimpleDateFormat("yyyy-mm-dd");
-                    Date currentDate = new Date();
-                    String date = formatter.format(currentDate);
-
-                    Map <String, Object> ticketDataMap = new HashMap<String, Object>();
-                    ticketDataMap.put("Titel", inputTitle);
-                    //ticketDataMap.put("Ersteller", inputCreator);
-                    ticketDataMap.put("Problembeschreibung", inputProblem);
-                    ticketDataMap.put("Datum", date);
-                    // TODO Status
-                    // TODO DB Kategorie
-                    //ticketDataMap.put("Kategorie", categoryId);
-
-                    // TODO setTicket(ticketDataMap) -> boolean
-
-                }
-            });
-        }
     }
+}
