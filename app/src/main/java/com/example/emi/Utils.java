@@ -8,6 +8,7 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 
 //Diese Klasse enthält universale Konvertierungswerkzeuge
 //Hier werden JSONArrays in ArrayLists umgewandelt, etc.
@@ -31,14 +32,17 @@ public class Utils {
     //Eine einzige Hashmap vom Typ !!!Ticket!!! aus einem JSONObject erstellen
     public static HashMap<String, String> jsonObjectToHashMap(JSONObject jsonObject) {
         HashMap<String, String> hashMap = new HashMap<>();
-        try {
-            hashMap.put("ID", jsonObject.getString("ID"));
-            hashMap.put("Titel", jsonObject.getString("Titel"));
-            hashMap.put("Datum", jsonObject.getString("Datum"));
-            hashMap.put("Problembeschreibung", jsonObject.getString("Problembeschreibung"));
-            hashMap.put("StatusID", jsonObject.getString("StatusID"));
-        } catch (JSONException e) {
-            e.printStackTrace();
+
+        Iterator jsonIterator = jsonObject.keys();
+        while(jsonIterator.hasNext()) {
+            String key = (String) jsonIterator.next();
+            String value = null;
+            try {
+                value = (String) jsonObject.get(key);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            hashMap.put(key, value);
         }
 
         return hashMap;
@@ -57,5 +61,21 @@ public class Utils {
             }
         }
         return stringArray;
+    }
+
+    public static JSONObject prepareDataForPost(HashMap<String,String> hashMap) {
+        JSONObject jsonParams = new JSONObject();
+        try {
+            jsonParams.put("Typ", "INSERT");
+            Iterator mapIterator = hashMap.keySet().iterator();
+            while(mapIterator.hasNext()) {
+                String key = (String)mapIterator.next();
+                String value = hashMap.get(key);
+                jsonParams.put(key, value);
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return jsonParams;
     }
 }

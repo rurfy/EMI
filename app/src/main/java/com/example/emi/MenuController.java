@@ -66,7 +66,7 @@ public class MenuController extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                Intent toAllTicketsPage = new Intent(MenuController.this, All_tickets.class);
+                Intent toAllTicketsPage = new Intent(MenuController.this, CreateTicket.class);
                 startActivity(toAllTicketsPage);
 
             }

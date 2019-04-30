@@ -51,19 +51,6 @@ public class RestUsage {
     //Das Objekt jsonObjekt wird in die Tabelle table per POST-Methode hinzugefügt
     public static void postOneItem(JSONObject jsonObject, String table) {
 
-        //################# NUR EIN BEISPIEL ########################################
-        JSONObject jsonParams = new JSONObject();
-        try {
-            jsonParams.put("Typ", "INSERT");
-            jsonParams.put("Titel", "Test12345");
-            jsonParams.put("Datum", "2019-04-28");
-            jsonParams.put("Problembeschreibung", "2019 ist toll");
-            jsonParams.put("StatusID", "10");
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        //################# MUSS VON AUßEN FESTGELEGT WERDEN #########################
-
         StringEntity entity = null;
         try {
             entity = new StringEntity(jsonObject.toString());
