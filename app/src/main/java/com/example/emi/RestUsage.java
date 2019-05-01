@@ -1,6 +1,8 @@
 package com.example.emi;
 
+import android.content.Context;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.loopj.android.http.*;
 
@@ -49,20 +51,7 @@ public class RestUsage {
     }
 
     //Das Objekt jsonObjekt wird in die Tabelle table per POST-Methode hinzugefügt
-    public static void postOneItem(JSONObject jsonObject, String table) {
-
-        //################# NUR EIN BEISPIEL ########################################
-        JSONObject jsonParams = new JSONObject();
-        try {
-            jsonParams.put("Typ", "INSERT");
-            jsonParams.put("Titel", "Test12345");
-            jsonParams.put("Datum", "2019-04-28");
-            jsonParams.put("Problembeschreibung", "2019 ist toll");
-            jsonParams.put("StatusID", "10");
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        //################# MUSS VON AUßEN FESTGELEGT WERDEN #########################
+    public static void postOneItem(JSONObject jsonObject, String table, final Context context) {
 
         StringEntity entity = null;
         try {
@@ -71,6 +60,13 @@ public class RestUsage {
             e.printStackTrace();
         }
 
-        APIConnector.post(null, table, entity, "application/json", new JsonHttpResponseHandler());
+        APIConnector.post(null, table, entity, "application/json", new JsonHttpResponseHandler() {
+
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
+                super.onSuccess(statusCode, headers, response);
+                Toast.makeText(context, "Das Ticket wurde erfolgreich angelegt.", Toast.LENGTH_LONG);
+            }
+        });
     }
 }

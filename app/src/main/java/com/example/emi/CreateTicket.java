@@ -1,5 +1,6 @@
 package com.example.emi;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -9,6 +10,13 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import com.loopj.android.http.JsonHttpResponseHandler;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -17,6 +25,8 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import cz.msebera.android.httpclient.Header;
 
 public class CreateTicket extends AppCompatActivity {
 
@@ -29,21 +39,13 @@ public class CreateTicket extends AppCompatActivity {
         TextView textViewStatus;
         Spinner spinnerStatus;
 
+        ArrayList<HashMap<String, String>> statusList;
+    ArrayList<HashMap<String, String>> categoryList;
+
         @Override
         protected void onCreate(Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
             setContentView(R.layout.show_ticket);
-
-            //##################### Testdaten #########################
-
-            // TODO getKategories() -> String[][]
-            final String[][] categoriesArray = new String[3][2];
-            categoriesArray[0][0] = "2";
-            categoriesArray[0][1] = "test";
-            categoriesArray[1][0] = "5";
-            categoriesArray[1][1] = "test2";
-
-            //#########################################################
 
             buttonCreate = (Button)findViewById(R.id.buttonLeft);
             buttonCreate.setText(R.string.ok);
@@ -51,91 +53,143 @@ public class CreateTicket extends AppCompatActivity {
             buttonCancel.setText(R.string.cancel);
 
 
-            // TODO getKategories() -> String[][]
-            // Liste für DropDown befüllen
-            List<String> categoriesList = new ArrayList<String>();
-            for (int i = 0; i<categoriesArray.length; i++) {
+            //Status aus der DB lesen und sowohl in den Spinner, als auch in eine ArrayList schreiben
+            APIConnector.get("Status", null, new JsonHttpResponseHandler() {
 
-                if (categoriesArray[i][1] == null) {
-                    break;
-                }else {
-                    categoriesList.add(categoriesArray[i][1]);
+                @Override
+                public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
+                    super.onSuccess(statusCode, headers, response);
+
+                    statusList = Utils.jsonToArrayList(response);
+                    List<String> spinnerArray =  new ArrayList<>();
+
+                    spinnerArray.add(statusList.get(0).get("Bezeichnung"));
+                    spinnerArray.add(statusList.get(1).get("Bezeichnung"));
+                    spinnerArray.add(statusList.get(2).get("Bezeichnung"));
+
+                    ArrayAdapter<String> adapter = new ArrayAdapter<>(
+                            CreateTicket.this, android.R.layout.simple_spinner_item, spinnerArray);
+                    adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                    spinnerStatus = (Spinner) findViewById(R.id.spinnerStatus);
+                    spinnerStatus.setAdapter(adapter);
+
                 }
-            }
-            // Drop-Down-Menü füllen
-            spinnerCategory = (Spinner) findViewById(R.id.spinnerCategory);
-            ArrayAdapter<String> categoryAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, categoriesList);
-            categoryAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-            spinnerCategory.setAdapter(categoryAdapter);
+            });
 
 
+            //Kategorien aus der DB lesen und sowohl in den Spinner, als auch in eine ArrayList schreiben
+            APIConnector.get("Kategorie", null, new JsonHttpResponseHandler() {
 
-            // TODO getStatus() -> String[][]
-            // Liste für DropDown befüllen
-            List<String> statusList = new ArrayList<String>();
-            statusList.add("nicht begonnen");
-            statusList.add("in Bearbeitung");
-            statusList.add("beendet");
+                @Override
+                public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
+                    super.onSuccess(statusCode, headers, response);
 
-            // Drop-Down-Menü füllen
-            spinnerStatus = (Spinner) findViewById(R.id.spinnerStatus);
-            ArrayAdapter<String> statusAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, statusList);
-            statusAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-            spinnerStatus.setAdapter(statusAdapter);
+                    categoryList = Utils.jsonToArrayList(response);
+                    List<String> spinnerArray =  new ArrayList<>();
+
+                    spinnerArray.add(categoryList.get(0).get("Bezeichnung"));
+                    spinnerArray.add(categoryList.get(1).get("Bezeichnung"));
+                    spinnerArray.add(categoryList.get(2).get("Bezeichnung"));
+
+                    ArrayAdapter<String> adapter = new ArrayAdapter<>(
+                            CreateTicket.this, android.R.layout.simple_spinner_item, spinnerArray);
+                    adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                    spinnerCategory = (Spinner) findViewById(R.id.spinnerCategory);
+                    spinnerCategory.setAdapter(adapter);
+
+                }
+            });
+
+            // Input Felder mit der xml-Datei verknüpft
+            inputTitle = (EditText)findViewById(R.id.textInputEditTextTitle);
+            inputProblem = (EditText)findViewById(R.id.textInputEditTextProblem);
 
 
-
+            //Wird ausgeführt wenn der Nutzer den OK-Button drückt
             buttonCreate.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Map <String, Object> ticketDataMap = new HashMap<String, Object>();
+                    Log.e(CreateTicket.this.getLocalClassName(), "Der OK Button wurde benutzt.");
 
-                    // Daten aus den Feldern auslesen
-                    inputTitle = (EditText)findViewById(R.id.textInputEditTextTitle);
-                    inputCreator = (EditText)findViewById(R.id.textInputEditTextCreator);
-                    inputProblem = (EditText)findViewById(R.id.textInputEditTextProblem);
+                    //Lokale HashMap zur Speicherung der eingegebenen Daten
+                    HashMap <String, String> ticketDataMap = new HashMap<>();
 
-                    // Position der ID aus der DB zuordnen
-                    int categoryPosition = spinnerCategory.getSelectedItemPosition();
-                    String categoryId = categoriesArray[categoryPosition][0];
+                    //Eingaben auslesen und in String speichern
+                    String title = inputTitle.getText().toString();
+                    String problem = inputProblem.getText().toString();
 
+                    //aktuelles Datum einlesen und in gewünschtem Format abspeichern
+                    SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+                    Date date = new Date();
+                    String datum = format.format(date);
+
+                    //ausgewählten Status herausfinden und die korrespondierende StatusID speichern
                     String status = spinnerStatus.getSelectedItem().toString();
-                    switch (status) {
-                        case "nicht begonnen": {
-                            ticketDataMap.put("StatusID", "50");
-                            break;
-                        }
-                        case "in Bearbeitung": {
-                            ticketDataMap.put("StatusID", "100");
-                            break;
-                        }
-                        case "beendet": {
-                            ticketDataMap.put("StatusID", "1000");
-                            break;
+                    String statID = "";
+                    for (int i = 0; i < statusList.size(); i++) {
+                        if (status.equals(statusList.get(i).get("Bezeichnung"))) {
+                            statID = statusList.get(i).get("ID");
                         }
                     }
 
-                    // aktuelles Datum holen
-                    SimpleDateFormat formatter = new SimpleDateFormat("yyyy-mm-dd");
-                    Date currentDate = new Date();
-                    String date = formatter.format(currentDate);
+                    //ausgewählte Kategorie herausfinden und die korrespondierende KategorieID speichern
+                    String category = spinnerCategory.getSelectedItem().toString();
+                    String catID = "";
+                    for (int i = 0; i < categoryList.size(); i++) {
+                        if (category.equals(categoryList.get(i).get("Bezeichnung"))) {
+                            catID = categoryList.get(i).get("ID");
+                        }
+                    }
+
+                    if (title.equals("")) {
+                        Toast.makeText(CreateTicket.this, "Bitte geben Sie einen Titel für das Ticket ein.",
+                                Toast.LENGTH_LONG).show();
+                    }
+                    else if (problem.equals("")) {
+                        Toast.makeText(CreateTicket.this, "Bitte geben Sie eine Problembeschreibung ein.",
+                                Toast.LENGTH_LONG).show();
+                    }
+                    else {
+
+                        //Daten in die Hashmap schreiben
+                        ticketDataMap.put("Titel", title);
+                        ticketDataMap.put("Datum", datum);
+                        ticketDataMap.put("Problembeschreibung", problem);
+                        ticketDataMap.put("StatusID", statID);
+                        ticketDataMap.put("KategorieID", catID);
 
 
-                    ticketDataMap.put("Titel", inputTitle);
-                    //ticketDataMap.put("Ersteller", inputCreator);
-                    ticketDataMap.put("Problembeschreibung", inputProblem);
-                    ticketDataMap.put("Datum", date);
+                        //Das einzufügende JSONObject wird mit den Daten befüllt und in die entsprechende Tabelle geladen
+                        JSONObject postObject = Utils.prepareDataForPost(ticketDataMap);
+                        RestUsage.postOneItem(postObject,"Ticket", CreateTicket.this);
 
-                    // TODO DB Kategorie
-                    //ticketDataMap.put("Kategorie", categoryId);
+                        //Intent backToMenu = new Intent(CreateTicket.this, MenuController.class);
+                        //startActivity(backToMenu);
 
-                    // TODO setTicket(ticketDataMap) -> boolean
+                    }
 
+                }
+            });
 
+            //Wird aufgerufen wenn der Cancel-Button betätigt wird
+            buttonCancel.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                    //Die Inputfelder werden zurückgesetzt
+                    inputProblem.setText("");
+                    inputTitle.setText("");
+
+                    //Nutzerausgabe, dass abgebrochen wurde
+                    Toast.makeText(CreateTicket.this, "Die Erstellung des Tickets wurde abgebrochen",
+                            Toast.LENGTH_LONG);
 
                 }
             });
         }
+
+
+
 }
 
 

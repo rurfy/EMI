@@ -80,5 +80,20 @@ public class Utils {
         return hashMap;
     }
 
+    public static JSONObject prepareDataForPost(HashMap<String,String> hashMap) {
+        JSONObject jsonParams = new JSONObject();
+        try {
+            jsonParams.put("Typ", "INSERT");
+            Iterator mapIterator = hashMap.keySet().iterator();
+            while(mapIterator.hasNext()) {
+                String key = (String)mapIterator.next();
+                String value = hashMap.get(key);
+                jsonParams.put(key, value);
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return jsonParams;
+    }
 
 }
