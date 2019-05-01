@@ -1,4 +1,4 @@
-package com.example.emi;
+package com.example.emi.view;
 
 import android.content.Context;
 import android.graphics.Color;
@@ -9,7 +9,8 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.Toast;
+
+import com.example.emi.R;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -19,26 +20,26 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-public class TicketController {
+public class LayoutUtils {
 
     // Setzt den Inhalt und die Bearbeitbarkeit für die InputFelder (Titel, Problembeschreibung)
-    // Verwendung: ShowTicket, EditTicket
+    // Verwendung: ShowTicketController, EditTicketController
     public static void setStaticContent(EditText inputTitle, EditText inputProblem, HashMap<String, String> ticketDataMap, boolean enabled){
 
 
-        inputTitle.setText(ticketDataMap.get("Titel").toString());
+        inputTitle.setText(ticketDataMap.get("Titel"));
         inputTitle.setEnabled(enabled);
 
         //inputCreator.setText(ticketDataMap.get("Ersteller").toString());
         //inputCreator.setEnabled(enabled);
 
-        inputProblem.setText(ticketDataMap.get("Problembeschreibung").toString());
+        inputProblem.setText(ticketDataMap.get("Problembeschreibung"));
         inputProblem.setEnabled(enabled);
     }
 
 
     // Befüllt den Spinner für den Status
-    // Verwendung: EditTicket, CreateTicket
+    // Verwendung: EditTicketController, CreateTicketController
     public static void setDropDownStatusContent (Spinner spinnerStatus, Context context, ArrayList<HashMap<String, String>> statusList) {
 
         List<String> spinnerArray =  new ArrayList<>();
@@ -57,11 +58,11 @@ public class TicketController {
     }
 
 
-    // Setzt die Farbe des Status-Kästchens (in ShowTicket verwendet)
-    // Verwendung: ShowTicket
+    // Setzt die Farbe des Status-Kästchens (in ShowTicketController verwendet)
+    // Verwendung: ShowTicketController
     public static void setStatus (TextView textViewStatus,  HashMap<String, String> ticketDataMap) {
 
-        switch (Integer.parseInt(ticketDataMap.get("StatusID").toString())) {
+        switch (Integer.parseInt(ticketDataMap.get("StatusID"))) {
             case 10: {
                 textViewStatus.setBackgroundResource(R.drawable.circle_red);
                 break;
@@ -83,13 +84,13 @@ public class TicketController {
 
 
     // Wählt den, aus dem Ticket ausgelesenen, Statuswert im Spinner aus
-    // Verwendung: EditTicket
+    // Verwendung: EditTicketController
     public static void setSelectedStatus (Spinner spinnerStatus, HashMap<String, String> ticketDataMap, ArrayList<HashMap<String, String>> statusList) {
 
         String status = "";
         // Zuordnen der StatusID zu einem Status
         for (int i = 0; i < statusList.size(); i++) {
-            if (ticketDataMap.get("StatusID").toString().equals(statusList.get(i).get("ID"))) {
+            if (ticketDataMap.get("StatusID").equals(statusList.get(i).get("ID"))) {
                 status = statusList.get(i).get("Bezeichnung");
             }
         }
@@ -102,7 +103,7 @@ public class TicketController {
 
 
     // Erstellt CheckBoxen für alle vorhandenen Kategorien
-    // Verwendung: CreateTicket
+    // Verwendung: CreateTicketController
     // HashMap: Key -> KategorieID, Value -> Bezeichnung
     public static ArrayList <CheckBox> setAllCategories (LinearLayout checkBoxContainer, Context context, HashMap<String, String> categoriesHashMap) {
 
@@ -130,7 +131,7 @@ public class TicketController {
 
 
     // Erstellt Checkboxen für alle vorhandenen Kategorien und setzt Häckchen in die Checkboxen der Kategorien, die zu einem Ticket gehören
-    // Verwendung: EditTicket
+    // Verwendung: EditTicketController
     public static ArrayList <CheckBox> setSelectedCategoriesCheckBox (LinearLayout checkBoxContainer, Context context, HashMap<String, String> categoriesHashMap, ArrayList<String> selectedCategories) {
 
         ArrayList<CheckBox> checkBoxesAllCategories = new ArrayList<>();
@@ -163,7 +164,7 @@ public class TicketController {
 
 
     // Zeigt alle Kategorien eines Tickets als Liste von TextViews an
-    // Verwendung ShowTicket
+    // Verwendung ShowTicketController
     public static void setSelectedCategoriesTextView (LinearLayout categorieLayout, Context context, HashMap<String, String> categoriesHashMap, ArrayList<String> selectedCategories) {
 
         ArrayList<TextView> createdCategorieTextViews = new ArrayList<>();
@@ -192,13 +193,13 @@ public class TicketController {
 
 
     // Holt die vom User eingegebenen Werte aus den InputFeldern (Titel, Problembeschreibung)
-    // Verwendung: EditTicket, CreateTicket
+    // Verwendung: EditTicketController, CreateTicketController
     public static HashMap <String, String> getStaticContent (EditText inputTitle, EditText inputProblem, Context context) {
 
         HashMap <String, String> ticketDataMap = new HashMap<>();
 
         // Holen des aktuellen Datums
-        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-mm-dd");
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
         Date currentDate = new Date();
         String date = formatter.format(currentDate);
 
@@ -215,7 +216,7 @@ public class TicketController {
 
 
     // Holt den vom User ausgewählten Wert aus dem Status-Spinner
-    // Verwendung: EditTicket, CreateTicket
+    // Verwendung: EditTicketController, CreateTicketController
     public static String getStatus (Spinner spinnerStatus, ArrayList<HashMap<String, String>> statusList) {
 
         String status = spinnerStatus.getSelectedItem().toString();
@@ -231,7 +232,7 @@ public class TicketController {
 
     // Holt die vom User ausgewählten Kategorien
     // Die ArrayList mit den CheckBoxen erhält man nach dem Generieren der CheckBoxen aus der Methode setSelectedCategoriesCheckBox() oder setAllCategories()
-    // Verwendung: EditTicket, CreateTicket
+    // Verwendung: EditTicketController, CreateTicketController
     public static ArrayList <String> getSelectedCategories (ArrayList <CheckBox> checkBoxesArrayList) {
 
         ArrayList<String> selectedCategories = new ArrayList<>();

@@ -1,35 +1,30 @@
-package com.example.emi;
+package com.example.emi.controller;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.LinearLayout;
-import android.widget.RadioButton;
-import android.widget.RadioGroup;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import com.example.emi.view.LayoutUtils;
+import com.example.emi.model.APIConnector;
+import com.example.emi.R;
 import com.loopj.android.http.JsonHttpResponseHandler;
 
 import org.json.JSONArray;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
 
 import cz.msebera.android.httpclient.Header;
 
-public class EditTicket extends AppCompatActivity {
+public class EditTicketController extends AppCompatActivity {
 
     Button buttonCreate;
     Button buttonCancel;
@@ -46,7 +41,7 @@ public class EditTicket extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.show_ticket);
+        setContentView(R.layout.single_ticket);
 
         Bundle b = getIntent().getExtras();
         if(b != null) {
@@ -55,17 +50,17 @@ public class EditTicket extends AppCompatActivity {
             Log.e("FehlerID", "keine ID eingetragen");
         }
 
-        inputTitle = (EditText) findViewById(R.id.textInputEditTextTitle);
-        inputProblem = (EditText) findViewById(R.id.textInputEditTextProblem);
+        inputTitle = findViewById(R.id.textInputEditTextTitle);
+        inputProblem = findViewById(R.id.textInputEditTextProblem);
         //inputCreator = (EditText)findViewById(R.id.textInputEditTextTitle);
-        spinnerStatus = (Spinner) findViewById(R.id.spinnerStatus);
-        checkBoxContainer = (LinearLayout) findViewById(R.id.linLayCheckBoxes);
+        spinnerStatus = findViewById(R.id.spinnerStatus);
+        checkBoxContainer = findViewById(R.id.linLayCheckBoxes);
 
 
         // Buttons Bezeichnung zuweisen
-        buttonCreate = (Button) findViewById(R.id.buttonLeft);
+        buttonCreate = findViewById(R.id.buttonLeft);
         buttonCreate.setText(R.string.ok);
-        buttonCancel = (Button) findViewById(R.id.buttonRight);
+        buttonCancel = findViewById(R.id.buttonRight);
         buttonCancel.setText(R.string.cancel);
 
 
@@ -75,20 +70,20 @@ public class EditTicket extends AppCompatActivity {
             public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
                 super.onSuccess(statusCode, headers, response);
 
-                statusList = Utils.jsonToArrayListHash(response);
+                statusList = JSONUtils.jsonToArrayListHash(response);
 
-                TicketController.setDropDownStatusContent(spinnerStatus, EditTicket.this, statusList);
+                LayoutUtils.setDropDownStatusContent(spinnerStatus, EditTicketController.this, statusList);
 
 
-                APIConnector.getOne("Ticket", null, 1, new JsonHttpResponseHandler() {
+                APIConnector.get("Ticket/" + ticketId.get(0), null, new JsonHttpResponseHandler() {
                     @Override
                     public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
 
                         super.onSuccess(statusCode, headers, response);
-                        HashMap<String, String> ticketDataMap = Utils.jsonToArrayListHash(response).get(0);
+                        HashMap<String, String> ticketDataMap = JSONUtils.jsonToArrayListHash(response).get(0);
 
-                        TicketController.setStaticContent(inputTitle, inputProblem, ticketDataMap, true);
-                        TicketController.setSelectedStatus(spinnerStatus, ticketDataMap, statusList);
+                        LayoutUtils.setStaticContent(inputTitle, inputProblem, ticketDataMap, true);
+                        LayoutUtils.setSelectedStatus(spinnerStatus, ticketDataMap, statusList);
 
                         APIConnector.get("Ticket_hat_Kategorie/1/TicketID", null, new JsonHttpResponseHandler() {
                             @Override
@@ -96,7 +91,7 @@ public class EditTicket extends AppCompatActivity {
 
                                 super.onSuccess(statusCode, headers, response);
 
-                                final ArrayList<String> selectedCategories = Utils.jsonToArrayListString(response, "KategorieID");
+                                final ArrayList<String> selectedCategories = JSONUtils.jsonToArrayListString(response, "KategorieID");
 
                                 APIConnector.get("Kategorie", null, new JsonHttpResponseHandler() {
 
@@ -106,10 +101,10 @@ public class EditTicket extends AppCompatActivity {
 
                                         super.onSuccess(statusCode, headers, response);
 
-                                        HashMap<String, String> categoriesHashMap = Utils.jsonArraytoHashMap(response);
+                                        HashMap<String, String> categoriesHashMap = JSONUtils.jsonArraytoHashMap(response);
 
 
-                                        checkBoxesCategories = TicketController.setSelectedCategoriesCheckBox(checkBoxContainer, EditTicket.this, categoriesHashMap, selectedCategories);
+                                        checkBoxesCategories = LayoutUtils.setSelectedCategoriesCheckBox(checkBoxContainer, EditTicketController.this, categoriesHashMap, selectedCategories);
                                         int x = checkBoxesCategories.size();
                                         Log.e("Size", Integer.toString(x));
 
@@ -128,25 +123,25 @@ public class EditTicket extends AppCompatActivity {
             public void onClick(View v) {
 
                 if (inputTitle.getText().toString().equals("")) {
-                    Toast.makeText(EditTicket.this, "Bitte geben Sie einen Titel für das Ticket ein.",
+                    Toast.makeText(EditTicketController.this, "Bitte geben Sie einen Titel für das Ticket ein.",
                             Toast.LENGTH_LONG).show();
                 }
                 else if (inputProblem.getText().toString().equals("")) {
-                    Toast.makeText(EditTicket.this, "Bitte geben Sie eine Problembeschreibung ein.",
+                    Toast.makeText(EditTicketController.this, "Bitte geben Sie eine Problembeschreibung ein.",
                             Toast.LENGTH_LONG).show();
                 }
                 else {
 
-                    HashMap<String, String> ticketDataMap = TicketController.getStaticContent(inputTitle, inputProblem, EditTicket.this);
-                    String statID = TicketController.getStatus(spinnerStatus, statusList);
+                    HashMap<String, String> ticketDataMap = LayoutUtils.getStaticContent(inputTitle, inputProblem, EditTicketController.this);
+                    String statID = LayoutUtils.getStatus(spinnerStatus, statusList);
                     ticketDataMap.put("StatusID", statID);
 
-                    ArrayList<String> selectedCategories = TicketController.getSelectedCategories(checkBoxesCategories);
+                    ArrayList<String> selectedCategories = LayoutUtils.getSelectedCategories(checkBoxesCategories);
 
 
                 // TODO Update Ticket in DB
 
-                    Intent toShowTicket = new Intent(EditTicket.this, ShowTicket.class);
+                    Intent toShowTicket = new Intent(EditTicketController.this, ShowTicketController.class);
                     Bundle b = new Bundle();
                     b.putInt("key", ticketId.get(0));
                     toShowTicket.putExtras(b);
@@ -160,7 +155,7 @@ public class EditTicket extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                Intent toShowTicket = new Intent(EditTicket.this, ShowTicket.class);
+                Intent toShowTicket = new Intent(EditTicketController.this, ShowTicketController.class);
                 Bundle b = new Bundle();
                 b.putInt("key", ticketId.get(0));
                 toShowTicket.putExtras(b);
