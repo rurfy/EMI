@@ -13,6 +13,7 @@ import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Spinner;
+import android.widget.Toast;
 
 import com.loopj.android.http.JsonHttpResponseHandler;
 
@@ -126,21 +127,32 @@ public class EditTicket extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                HashMap<String, String> ticketDataMap = TicketController.getStaticContent(inputTitle, inputProblem);
-                String statID = TicketController.getStatus(spinnerStatus, statusList);
-                ticketDataMap.put("StatusID", statID);
+                if (inputTitle.getText().toString().equals("")) {
+                    Toast.makeText(EditTicket.this, "Bitte geben Sie einen Titel für das Ticket ein.",
+                            Toast.LENGTH_LONG).show();
+                }
+                else if (inputProblem.getText().toString().equals("")) {
+                    Toast.makeText(EditTicket.this, "Bitte geben Sie eine Problembeschreibung ein.",
+                            Toast.LENGTH_LONG).show();
+                }
+                else {
 
-                ArrayList<String> selectedCategories = TicketController.getSelectedCategories(checkBoxesCategories);
+                    HashMap<String, String> ticketDataMap = TicketController.getStaticContent(inputTitle, inputProblem, EditTicket.this);
+                    String statID = TicketController.getStatus(spinnerStatus, statusList);
+                    ticketDataMap.put("StatusID", statID);
+
+                    ArrayList<String> selectedCategories = TicketController.getSelectedCategories(checkBoxesCategories);
 
 
                 // TODO Update Ticket in DB
 
-                Intent toShowTicket = new Intent(EditTicket.this, ShowTicket.class);
-                Bundle b = new Bundle();
-                b.putInt("key", ticketId.get(0));
-                toShowTicket.putExtras(b);
-                startActivity(toShowTicket);
-                finish();
+                    Intent toShowTicket = new Intent(EditTicket.this, ShowTicket.class);
+                    Bundle b = new Bundle();
+                    b.putInt("key", ticketId.get(0));
+                    toShowTicket.putExtras(b);
+                    startActivity(toShowTicket);
+                    finish();
+                }
             }
         });
 
