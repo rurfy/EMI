@@ -1,4 +1,4 @@
-package com.example.emi;
+package com.example.emi.controller;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -6,7 +6,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 
-import org.json.JSONException;
+import com.example.emi.R;
 
 public class MenuController extends AppCompatActivity {
 
@@ -22,8 +22,9 @@ public class MenuController extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                Intent toCreatePage = new Intent(MenuController.this, CreateTicket.class);
-                startActivity(toCreatePage);
+                //Es wird auf die CreateTicketController Activity gewechselt
+                Intent toAllTicketsPage = new Intent(MenuController.this, CreateTicketController.class);
+                startActivity(toAllTicketsPage);
 
             }
         });
@@ -32,11 +33,13 @@ public class MenuController extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                Intent toAllTicketsPage = new Intent(MenuController.this, All_tickets.class);
+                Intent toAllTicketsPage = new Intent(MenuController.this, ShowTicketController.class);
                 startActivity(toAllTicketsPage);
+
 
             }
         });
 
     }
+
 }
