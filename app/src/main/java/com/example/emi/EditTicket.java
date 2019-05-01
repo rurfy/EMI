@@ -1,5 +1,6 @@
 package com.example.emi;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -34,17 +35,24 @@ public class EditTicket extends AppCompatActivity {
     EditText inputTitle;
     EditText inputCreator;
     EditText inputProblem;
-    CheckBox checkBox;
     Spinner spinnerStatus;
     LinearLayout checkBoxContainer;
-    ArrayList<CheckBox> checkBoxesCategories;
-    ArrayList<HashMap<String, String>> statusList;
+    ArrayList<Integer> ticketId = new ArrayList<>();
+    ArrayList<CheckBox> checkBoxesCategories = new ArrayList<>();
+    ArrayList<HashMap<String, String>> statusList = new ArrayList<>();
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.show_ticket);
+
+        Bundle b = getIntent().getExtras();
+        if(b != null) {
+            ticketId.add(0, b.getInt("key"));
+        } else {
+            Log.e("FehlerID", "keine ID eingetragen");
+        }
 
         inputTitle = (EditText) findViewById(R.id.textInputEditTextTitle);
         inputProblem = (EditText) findViewById(R.id.textInputEditTextProblem);
@@ -125,9 +133,14 @@ public class EditTicket extends AppCompatActivity {
                 ArrayList<String> selectedCategories = TicketController.getSelectedCategories(checkBoxesCategories);
 
 
-                //TODO Status
                 // TODO Update Ticket in DB
 
+                Intent toShowTicket = new Intent(EditTicket.this, ShowTicket.class);
+                Bundle b = new Bundle();
+                b.putInt("key", ticketId.get(0));
+                toShowTicket.putExtras(b);
+                startActivity(toShowTicket);
+                finish();
             }
         });
 
@@ -135,9 +148,13 @@ public class EditTicket extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
+                Intent toShowTicket = new Intent(EditTicket.this, ShowTicket.class);
+                Bundle b = new Bundle();
+                b.putInt("key", ticketId.get(0));
+                toShowTicket.putExtras(b);
+                startActivity(toShowTicket);
+                finish();
             }
         });
-
-
     }
 }
