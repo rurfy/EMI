@@ -1,6 +1,7 @@
 package com.example.emi;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
@@ -8,6 +9,7 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -178,6 +180,7 @@ public class TicketController {
         for (int i = 0; i < selectedCategoriesList.size(); i++) {
             TextView selectedCategoryTextView = new TextView(context);
             selectedCategoryTextView.setText(selectedCategoriesList.get(i));
+            selectedCategoryTextView.setTextColor(Color.parseColor("#000000"));
 
             createdCategorieTextViews.add(i, selectedCategoryTextView);
 
@@ -190,7 +193,7 @@ public class TicketController {
 
     // Holt die vom User eingegebenen Werte aus den InputFeldern (Titel, Problembeschreibung)
     // Verwendung: EditTicket, CreateTicket
-    public static HashMap <String, String> getStaticContent (EditText inputTitle, EditText inputProblem) {
+    public static HashMap <String, String> getStaticContent (EditText inputTitle, EditText inputProblem, Context context) {
 
         HashMap <String, String> ticketDataMap = new HashMap<>();
 
@@ -199,11 +202,12 @@ public class TicketController {
         Date currentDate = new Date();
         String date = formatter.format(currentDate);
 
-        // Schreiben der Daten in eine Hashmap für Post-Methode
-        ticketDataMap.put("Titel", inputTitle.getText().toString());
-        //ticketDataMap.put("Ersteller", inputCreator.getText().toString());
-        ticketDataMap.put("Problembeschreibung", inputProblem.getText().toString());
-        ticketDataMap.put("Datum", date);
+
+            // Schreiben der Daten in eine Hashmap für Post-Methode
+            ticketDataMap.put("Titel", inputTitle.getText().toString());
+            //ticketDataMap.put("Ersteller", inputCreator.getText().toString());
+            ticketDataMap.put("Problembeschreibung", inputProblem.getText().toString());
+            ticketDataMap.put("Datum", date);
 
         return ticketDataMap;
 
