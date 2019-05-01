@@ -1,21 +1,31 @@
 package com.example.emi;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import com.loopj.android.http.JsonHttpResponseHandler;
+
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.TimeUnit;
+
+import cz.msebera.android.httpclient.Header;
 
 public class ShowTicket extends AppCompatActivity {
 
@@ -24,32 +34,28 @@ public class ShowTicket extends AppCompatActivity {
     EditText inputTitle;
     EditText inputCreator;
     EditText inputProblem;
-    Spinner spinnerCategory;
     TextView textViewStatus;
+    LinearLayout categorieLayout;
+    ArrayList<Integer> ticketId = new ArrayList<>();
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.show_ticket);
 
-        //##################### Testdaten #########################
+        Bundle b = getIntent().getExtras();
+        if(b != null) {
+            ticketId.add(0, b.getInt("key"));
+        } else {
+            ticketId.add(0, 1);
+        }
 
-        // TODO getKategories() -> String[][]
-        final String[][] categoriesArray = new String[3][2];
-        categoriesArray[0][0] = "2";
-        categoriesArray[0][1] = "test";
-        categoriesArray[1][0] = "5";
-        categoriesArray[1][1] = "test2";
+        inputProblem = (EditText) findViewById(R.id.textInputEditTextProblem);
+        inputTitle = (EditText) findViewById(R.id.textInputEditTextTitle);
+        textViewStatus = (TextView) findViewById(R.id.textViewStatus);
+        categorieLayout = (LinearLayout) findViewById(R.id.linLayCheckBoxes);
 
-
-        Map ticketDataMap = new HashMap();
-        ticketDataMap.put("Titel", "TestTitel");
-        ticketDataMap.put("Ersteller", "Marie Berger");
-        ticketDataMap.put("Problembeschreibung", "ist kaputt");
-        ticketDataMap.put("Kategorie", "2");
-        ticketDataMap.put("StatusID", "50");
-
-        //#########################################################
 
         // Buttons Bezeichnung zuweisen
         buttonEdit = (Button) findViewById(R.id.buttonLeft);
@@ -58,113 +64,64 @@ public class ShowTicket extends AppCompatActivity {
         buttonBack.setText(R.string.back);
 
 
-        // TODO getTicket() -> Hashmap
-        RestUsage.getOneItem("Ticket", 1, new OnJSONResponseCallback() {
+        APIConnector.getOne("Ticket", null, ticketId.get(0), new JsonHttpResponseHandler() {
             @Override
-            public void onJSONResponse(JSONArray response) {
-                //Das JSONAraay wird per Interface gezogen und beispielhaft in eine lokale ArrayList geschrieben
-                //Hierfür wurde die Utilsklasse zur Hilfe genommen
-                ArrayList<HashMap<String,String>> arrayList = Utils.jsonToArrayList(response);
+            public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
 
-                Map <String,String> ticketDataMap = arrayList.get(0);
+                super.onSuccess(statusCode, headers, response);
+                HashMap<String, String> ticketDataMap = Utils.jsonToArrayListHash(response).get(0);
 
-                // Werte aus der DB in die Felder eintragen und Felder sperren
-                inputTitle = (EditText)findViewById(R.id.textInputEditTextTitle);
-                inputTitle.setEnabled(false);
-                inputTitle.setText(ticketDataMap.get("Titel").toString());
+                TicketController.setStaticContent(inputTitle, inputProblem, ticketDataMap, false);
+                TicketController.setStatus(textViewStatus, ticketDataMap);
 
-                //inputCreator = (EditText)findViewById(R.id.textInputEditTextCreator);
-                //inputCreator.setEnabled(false);
-                //inputCreator.setText(ticketDataMap.get("Ersteller").toString());
+                APIConnector.get("Ticket_hat_Kategorie/" + ticketId.get(0) + "/TicketID", null, new JsonHttpResponseHandler() {
+                    @Override
+                    public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
 
-                inputProblem = (EditText)findViewById(R.id.textInputEditTextProblem);
-                inputProblem.setEnabled(false);
-                inputProblem.setText(ticketDataMap.get("Problembeschreibung").toString());
+                        super.onSuccess(statusCode, headers, response);
 
-                textViewStatus = (TextView)findViewById(R.id.textViewStatus);
-                switch (Integer.parseInt(ticketDataMap.get("StatusID").toString())) {
-                    case 50: {
-                        textViewStatus.setBackgroundResource(R.drawable.circle_red);
-                        break;
+                        final ArrayList<String> selectedCategories = Utils.jsonToArrayListString(response, "KategorieID");
+
+
+                        APIConnector.get("Kategorie", null, new JsonHttpResponseHandler() {
+
+                            @Override
+                            public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
+
+
+                                super.onSuccess(statusCode, headers, response);
+
+                                HashMap<String, String> categoriesHashMap = Utils.jsonArraytoHashMap(response);
+
+                                TicketController.setSelectedCategoriesTextView(categorieLayout, ShowTicket.this, categoriesHashMap, selectedCategories);
+                            }
+                        });
                     }
-                    case 100: {
-                        textViewStatus.setBackgroundResource(R.drawable.circle_yellow);
-                        break;
-                    }
-                    case 1000: {
-                        textViewStatus.setBackgroundResource(R.drawable.circle_green);
-                        break;
-                    }
-                    default: {
-                        textViewStatus.setBackgroundResource(R.drawable.circle_red);
-                        break;
-                    }
-                }
-
-            }
-
-            //Wird nicht benötigt hier, muss aber überschrieben werden
-            @Override
-            public void onJSONResponse(JSONObject response) {
-
+                });
             }
         });
 
-
-
-
-
-
-         //Auslesen der Kategorien aus der DB
-            RestUsage.getAllItems("Kategorie", new OnJSONResponseCallback() {
+        buttonEdit.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onJSONResponse(JSONArray response) {
-               //Das JSONAraay wird per Interface gezogen und beispielhaft in eine lokale ArrayList geschrieben
-               //Hierfür wurde die Utilsklasse zur Hilfe genommen
-               String[][] categoriesArray = Utils.jsonArraytoStingArray(response, "Bezeichnung");
-               for (int i = 0; i < categoriesArray.length; i++) {
-                   Log.e("Bezeichnung", categoriesArray[i][1]);
-               }
+            public void onClick(View v) {
 
-                // Liste für DropDown befüllen
-                List<String> categoriesList = new ArrayList<String>();
-                for (int i = 0; i<categoriesArray.length; i++) {
-
-                    if (categoriesArray[i][1] == null) {
-                        break;
-                    }else {
-                        categoriesList.add(categoriesArray[i][1]);
-                    }
-                }
-                // Drop-Down-Menü füllen
-                spinnerCategory = (Spinner) findViewById(R.id.spinnerCategory);
-                ArrayAdapter<String> adapter = new ArrayAdapter<String>(ShowTicket.this, android.R.layout.simple_spinner_item, categoriesList);
-
-                adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                spinnerCategory.setAdapter(adapter);
-                spinnerCategory.setEnabled(false);
-                spinnerCategory.setClickable(false);
-                spinnerCategory.setSelection(1);
-
-                // Wert aus DB in DropDown auswählen
-                //for (int i = 0; i < categoriesArray.length; i++) {
-                 //   if (categoriesArray[i][0].equals((ticketDataMap.get("Kategorie").toString()))) {
-                 //       spinnerCategory.setSelection(i);
-                 //       break;
-                 //   }
-                //}
-
-           }
-
-        //Wird nicht benötigt hier, muss aber überschrieben werden
-           @Override
-          public void onJSONResponse(JSONObject response) {
-
-           }
+                Intent toEditPage = new Intent(ShowTicket.this, EditTicket.class);
+                Bundle b = new Bundle();
+                b.putInt("key", ticketId.get(0));
+                toEditPage.putExtras(b);
+                startActivity(toEditPage);
+                finish();
+            }
         });
 
+        buttonBack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
 
-
-        // TODO Buttons Funktionalität
+                // TODO Ziel anpassen
+                Intent toAllTicketsPage = new Intent(ShowTicket.this, MenuController.class);
+                startActivity(toAllTicketsPage);
+            }
+        });
     }
 }

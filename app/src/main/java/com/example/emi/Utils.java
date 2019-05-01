@@ -14,8 +14,8 @@ import java.util.Iterator;
 //Hier werden JSONArrays in ArrayLists umgewandelt, etc.
 public class Utils {
 
-    //Eine gesamte ArrayList vom Typ !!!Ticket!!! aus einem JSONArray erstellen
-    public static ArrayList<HashMap<String, String>> jsonToArrayList(JSONArray jsonArray) {
+    //Eine gesamte ArrayList<HashMap> aus einem JSONArray erstellen
+    public static ArrayList<HashMap<String, String>> jsonToArrayListHash(JSONArray jsonArray) {
 
         ArrayList<HashMap<String, String>> arrayList = new ArrayList<>();
         for (int i = 0; i < jsonArray.length(); i++) {
@@ -25,6 +25,23 @@ public class Utils {
                 e.printStackTrace();
             }
         }
+        return arrayList;
+
+    }
+
+    public static ArrayList<String> jsonToArrayListString(JSONArray jsonArray, String attribute) {
+
+        ArrayList<String> arrayList = new ArrayList<>();
+
+
+                for (int i = 0; i < jsonArray.length(); i++) {
+                    try {
+                        arrayList.add(jsonArray.getJSONObject(i).getString(attribute));
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+
         return arrayList;
 
     }
@@ -48,19 +65,19 @@ public class Utils {
         return hashMap;
     }
 
-    public static String[][] jsonArraytoStingArray(JSONArray jsonArray, String attribute) {
-        int size = jsonArray.length();
-        String[][] stringArray = new String[size][2];
+    public static HashMap<String, String> jsonArraytoHashMap (JSONArray jsonArray) {
+        HashMap <String, String> hashMap = new HashMap<>();
 
-        for (int i = 0; i < jsonArray.length(); i++) {
+        for (int i = 0; i<jsonArray.length(); i++) {
             try {
-                stringArray[i][0] = (jsonArray.getJSONObject(i)).getString("ID");
-                stringArray[i][1] = (jsonArray.getJSONObject(i)).getString(attribute);
+                hashMap.put(jsonArray.getJSONObject(i).getString("ID"), jsonArray.getJSONObject(i).getString("Bezeichnung"));
             } catch (JSONException e) {
-                e.printStackTrace();
+
             }
+
         }
-        return stringArray;
+
+        return hashMap;
     }
 
     public static JSONObject prepareDataForPost(HashMap<String,String> hashMap) {
@@ -78,4 +95,5 @@ public class Utils {
         }
         return jsonParams;
     }
+
 }

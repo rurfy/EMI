@@ -1,84 +1,106 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
 
+xmlns:app="http://schemas.android.com/apk/res-auto"
+xmlns:tools="http://schemas.android.com/tools"
+android:layout_width="match_parent"
+android:layout_height="match_parent">
+
+
+
+    <ImageView
+        android:id="@+id/background"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/rahmen"
+        app:srcCompat="@drawable/background" />
 
     <include
-        android:id="@+id/rahmen"
-        layout="@layout/rahmen"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+    android:id="@+id/rahmen"
+    layout="@layout/rahmen"
+    android:layout_width="0dp"
+    android:layout_height="wrap_content"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toTopOf="parent" />
 
-    <LinearLayout
-        android:id="@+id/linearLayoutButtons"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_margin="10dp"
-        android:orientation="horizontal"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/rahmen">
+<LinearLayout
+    android:id="@+id/linearLayoutButtons"
+    android:layout_width="0dp"
+    android:layout_height="wrap_content"
+    android:layout_margin="10dp"
+    android:orientation="horizontal"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toBottomOf="@+id/rahmen">
 
-        <Button
-            android:id="@+id/buttonLeft"
-            android:layout_width="wrap_content"
-            android:layout_height="45dp"
-            android:layout_marginEnd="20dp"
-            android:layout_weight="1"
-            android:width="45dp"
-            android:height="45dp"
-            android:lines="1" />
-
-        <Button
-            android:id="@+id/buttonRight"
-            android:layout_width="wrap_content"
-            android:layout_height="45dp"
-            android:layout_marginStart="20dp"
-            android:layout_weight="1"
-            android:width="45dp"
-            android:height="45dp"
-            android:lines="1"
-            app:layout_constraintHorizontal_bias="0.964" />
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/linearLayoutStatus"
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:layout_marginStart="30dp"
-        android:layout_marginTop="20dp"
-        android:layout_marginEnd="30dp"
+    <Button
+        android:id="@+id/buttonLeft"
+        android:layout_width="wrap_content"
+        android:layout_height="45dp"
+        android:layout_marginEnd="20dp"
         android:layout_weight="1"
-        android:orientation="horizontal"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/linearLayoutButtons">
 
-        <TextView
-            android:id="@+id/textViewStatusText"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:text="@string/status"
-            android:textAlignment="viewStart" />
+        android:width="45dp"
+        android:height="45dp"
+        android:background="@color/colorForeground"
+        android:lines="1"
+        android:textColor="@color/colorTextLight" />
 
-        <Spinner
-            android:id="@+id/spinnerStatus"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="2" />
+    <Button
+        android:id="@+id/buttonRight"
+        android:layout_width="wrap_content"
+        android:layout_height="45dp"
+        android:layout_marginStart="20dp"
+        android:layout_weight="1"
+        android:width="45dp"
+        android:height="45dp"
+        android:background="@color/colorForeground"
+        android:lines="1"
+        android:textColor="@color/colorTextLight"
+        app:layout_constraintHorizontal_bias="0.964" />
+</LinearLayout>
 
-        <TextView
-            android:id="@+id/textViewStatus"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1" />
-    </LinearLayout>
+<LinearLayout
+    android:id="@+id/linearLayoutStatus"
+    android:layout_width="match_parent"
+    android:layout_height="40dp"
+    android:layout_marginStart="30dp"
+    android:layout_marginTop="20dp"
+    android:layout_marginEnd="30dp"
+    android:layout_weight="1"
+    android:orientation="horizontal"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toBottomOf="@id/linearLayoutButtons">
+
+    <TextView
+        android:id="@+id/textViewStatusText"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:text="@string/status"
+        android:textAlignment="viewStart"
+        android:textColor="@color/colorTextDark"
+        android:textStyle="bold" />
+
+    <Spinner
+        android:id="@+id/spinnerStatus"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="2"
+        android:background="@android:color/white"
+        android:visibility="invisible" />
+
+    <TextView
+        android:id="@+id/textViewStatus"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1" />
+</LinearLayout>
 
     <TextView
         android:id="@+id/textViewTitle"
@@ -88,6 +110,8 @@
         android:layout_marginTop="20dp"
         android:layout_marginRight="30dp"
         android:text="@string/title"
+        android:textColor="@color/colorTextDark"
+        android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/linearLayoutStatus" />
@@ -99,6 +123,7 @@
         android:layout_marginStart="30dp"
         android:layout_marginTop="5dp"
         android:layout_marginEnd="30dp"
+        android:background="@android:color/white"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/textViewTitle">
@@ -106,7 +131,14 @@
         <android.support.design.widget.TextInputEditText
             android:id="@+id/textInputEditTextTitle"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:background="@null"
+            android:lines="1"
+            android:maxLines="1"
+            android:textColor="@android:color/black"
+            android:textColorHighlight="@android:color/black"
+            android:textColorHint="@android:color/black"
+            android:textColorLink="@android:color/black" />
     </android.support.design.widget.TextInputLayout>
 
     <TextView
@@ -118,28 +150,34 @@
         android:layout_marginEnd="30dp"
         android:layout_weight="1"
         android:text="@string/creator"
+        android:textColor="@color/colorTextDark"
+        android:textStyle="bold"
         android:visibility="gone"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/textInputLayoutTitle" />
 
-    <android.support.design.widget.TextInputLayout
-        android:id="@+id/textInputLayoutCreator"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="30dp"
-        android:layout_marginTop="5dp"
-        android:layout_marginEnd="30dp"
-        android:visibility="gone"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/textViewCreator">
+<android.support.design.widget.TextInputLayout
+    android:id="@+id/textInputLayoutCreator"
+    android:layout_width="0dp"
+    android:layout_height="wrap_content"
+    android:layout_marginStart="30dp"
+    android:layout_marginTop="5dp"
+    android:layout_marginEnd="30dp"
+    android:visibility="gone"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toBottomOf="@id/textViewCreator">
 
-        <android.support.design.widget.TextInputEditText
-            android:id="@+id/textInputEditTextCreator"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
-    </android.support.design.widget.TextInputLayout>
+    <android.support.design.widget.TextInputEditText
+        android:id="@+id/textInputEditTextCreator"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColor="@android:color/black"
+        android:textColorHighlight="@android:color/black"
+        android:textColorHint="@android:color/black"
+        android:textColorLink="@android:color/black" />
+</android.support.design.widget.TextInputLayout>
 
     <TextView
         android:id="@+id/textViewCategory"
@@ -149,21 +187,32 @@
         android:layout_marginTop="20dp"
         android:layout_marginEnd="30dp"
         android:text="@string/category"
+        android:textColor="@color/colorTextDark"
+        android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/textInputLayoutCreator" />
 
-    <Spinner
-        android:id="@+id/spinnerCategory"
+    <ScrollView
+        android:id="@+id/scrollViewKategorie"
         android:layout_width="0dp"
-        android:layout_height="50dp"
+        android:layout_height="wrap_content"
         android:layout_marginStart="30dp"
-        android:layout_marginTop="5dp"
+        android:layout_marginTop="10dp"
         android:layout_marginEnd="30dp"
-        android:spinnerMode="dropdown"
+        android:maxHeight="100dp"
+        android:minHeight="20dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/textViewCategory" />
+        app:layout_constraintTop_toBottomOf="@id/textViewCategory">
+
+        <LinearLayout
+            android:id="@+id/linLayCheckBoxes"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@android:color/white"
+            android:orientation="vertical" />
+    </ScrollView>
 
     <TextView
         android:id="@+id/textViewProblem"
@@ -173,19 +222,20 @@
         android:layout_marginTop="20dp"
         android:layout_marginEnd="30dp"
         android:text="@string/problem"
+        android:textColor="@color/colorTextDark"
+        android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/spinnerCategory" />
+        app:layout_constraintTop_toBottomOf="@id/scrollViewKategorie" />
 
     <ScrollView
         android:id="@+id/scrollView"
         android:layout_width="0dp"
-        android:layout_height="0dp"
+        android:layout_height="200dp"
         android:layout_marginStart="30dp"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="5dp"
         android:layout_marginEnd="30dp"
         android:visibility="visible"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/textViewProblem">
@@ -200,14 +250,20 @@
                 android:id="@+id/textInputLayoutProblem"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-                android:layout_weight="1">
+                android:layout_weight="1"
+                android:background="@android:color/white">
 
                 <android.support.design.widget.TextInputEditText
                     android:id="@+id/textInputEditTextProblem"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:lines="20" />
+                    android:background="@null"
+                    android:maxLines="20"
+                    android:minLines="1"
+                    android:textColor="@android:color/black"
+                    android:textColorHighlight="@android:color/black"
+                    android:textColorHint="@android:color/black"
+                    android:textColorLink="@android:color/black" />
             </android.support.design.widget.TextInputLayout>
 
         </LinearLayout>
