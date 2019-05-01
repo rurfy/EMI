@@ -1,9 +1,7 @@
-package com.example.emi;
+package com.example.emi.model;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
-
-import java.util.ArrayList;
 
 //Interface dient zur besseren Bedienung der REST-GET-Requests
 //Durch Implementierung in eine Klasse kann ein JSONObject oder JSONArray erhalten werden

@@ -1,7 +1,6 @@
-package com.example.emi;
+package com.example.emi.model;
 
 import android.content.Context;
-import android.util.Log;
 
 import com.loopj.android.http.*;
 
@@ -16,18 +15,13 @@ public class APIConnector {
         client.get(getAbsoluteUrl(url), params, responseHandler);
     }
 
-    //Der Unterschied zur normalen get-Methode besteht darin, dass zusätzlich die ID als int übergeben wird
-    //Die zu verwendende URL wird dann automatisch angepasst
-    public static void getOne(String url, RequestParams params, int id, AsyncHttpResponseHandler responseHandler) {
-        client.get(getAbsoluteUrl(url,id), params, responseHandler);
-    }
 
     //JSONObject welches eingefügt werden soll, entspricht der StringEntity
-    //Das Object wird in der RestUsage Klasse übergeben und umgewandelt
+    //Das Object wird in der RestUtils Klasse übergeben und umgewandelt
     //Context kann immer null sein, und ContentType wird automatisch gesetzt
     public static void post(Context context, String url, StringEntity entity, String contentType, AsyncHttpResponseHandler responseHandler) {
         client.addHeader("Accept", "application/json");
-        client.addHeader("Content-type", "application/json");
+        client.addHeader("Content-Type", "application/json");
         client.post(context, getAbsoluteUrl(url), entity, contentType, responseHandler);
     }
 

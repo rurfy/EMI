@@ -1,6 +1,4 @@
-package com.example.emi;
-
-import android.util.Log;
+package com.example.emi.controller;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -12,7 +10,7 @@ import java.util.Iterator;
 
 //Diese Klasse enthält universale Konvertierungswerkzeuge
 //Hier werden JSONArrays in ArrayLists umgewandelt, etc.
-public class Utils {
+public class JSONUtils {
 
     //Eine gesamte ArrayList<HashMap> aus einem JSONArray erstellen
     public static ArrayList<HashMap<String, String>> jsonToArrayListHash(JSONArray jsonArray) {
@@ -73,6 +71,7 @@ public class Utils {
                 hashMap.put(jsonArray.getJSONObject(i).getString("ID"), jsonArray.getJSONObject(i).getString("Bezeichnung"));
             } catch (JSONException e) {
 
+                e.printStackTrace();
             }
 
         }

@@ -9,23 +9,24 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".MenuController" android:screenOrientation="portrait">
+        <activity android:name=".controller.MenuController" android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+                <action android:name="android.intent.action.VIEW" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".All_tickets" android:screenOrientation="portrait">
+        <activity android:name=".controller.AllTicketsController" android:screenOrientation="portrait">
 
         </activity>
-        <activity android:name=".ShowTicket" android:screenOrientation="portrait">
+        <activity android:name=".controller.ShowTicketController" android:screenOrientation="portrait">
 
         </activity>
-        <activity android:name=".CreateTicket" android:screenOrientation="portrait">
+        <activity android:name=".controller.CreateTicketController" android:screenOrientation="portrait">
 
         </activity>
-        <activity android:name=".EditTicket" android:screenOrientation="portrait">
+        <activity android:name=".controller.EditTicketController" android:screenOrientation="portrait">
 
         </activity>
 
