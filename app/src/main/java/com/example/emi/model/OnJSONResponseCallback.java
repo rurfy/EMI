@@ -8,5 +8,6 @@ import org.json.JSONObject;
 public interface OnJSONResponseCallback {
 
     void onJSONResponse(JSONArray response);
-    void onJSONResponse(JSONObject response);
+
+    void onJSONResponse(String id);
 }

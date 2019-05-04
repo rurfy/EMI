@@ -44,7 +44,7 @@ public class EditTicketController extends AppCompatActivity {
         setContentView(R.layout.single_ticket);
 
         Bundle b = getIntent().getExtras();
-        if(b != null) {
+        if (b != null) {
             ticketId.add(0, b.getInt("key"));
         } else {
             Log.e("FehlerID", "keine ID eingetragen");
@@ -52,7 +52,6 @@ public class EditTicketController extends AppCompatActivity {
 
         inputTitle = findViewById(R.id.textInputEditTextTitle);
         inputProblem = findViewById(R.id.textInputEditTextProblem);
-        //inputCreator = (EditText)findViewById(R.id.textInputEditTextTitle);
         spinnerStatus = findViewById(R.id.spinnerStatus);
         checkBoxContainer = findViewById(R.id.linLayCheckBoxes);
 
@@ -125,12 +124,10 @@ public class EditTicketController extends AppCompatActivity {
                 if (inputTitle.getText().toString().equals("")) {
                     Toast.makeText(EditTicketController.this, "Bitte geben Sie einen Titel für das Ticket ein.",
                             Toast.LENGTH_LONG).show();
-                }
-                else if (inputProblem.getText().toString().equals("")) {
+                } else if (inputProblem.getText().toString().equals("")) {
                     Toast.makeText(EditTicketController.this, "Bitte geben Sie eine Problembeschreibung ein.",
                             Toast.LENGTH_LONG).show();
-                }
-                else {
+                } else {
 
                     HashMap<String, String> ticketDataMap = LayoutUtils.getStaticContent(inputTitle, inputProblem, EditTicketController.this);
                     String statID = LayoutUtils.getStatus(spinnerStatus, statusList);
@@ -139,7 +136,7 @@ public class EditTicketController extends AppCompatActivity {
                     ArrayList<String> selectedCategories = LayoutUtils.getSelectedCategories(checkBoxesCategories);
 
 
-                // TODO Update Ticket in DB
+                    // TODO Update Ticket in DB
 
                     Intent toShowTicket = new Intent(EditTicketController.this, ShowTicketController.class);
                     Bundle b = new Bundle();

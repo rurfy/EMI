@@ -95,4 +95,12 @@ public class JSONUtils {
         return jsonParams;
     }
 
+    public static JSONArray stringArrayToJsonArray(ArrayList<String> categories) {
+        JSONArray array = new JSONArray();
+        for (String category: categories) {
+            array.put(category);
+        }
+        return array;
+    }
+
 }
