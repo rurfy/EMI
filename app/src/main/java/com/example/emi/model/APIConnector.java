@@ -29,8 +29,5 @@ public class APIConnector {
         return BASE_URL + relativeUrl;
     }
 
-    private static String getAbsoluteUrl(String relativeUrl, int id) {
-        return BASE_URL + relativeUrl + "/" + id;
-    }
 
 }

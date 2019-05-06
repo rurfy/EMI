@@ -39,7 +39,7 @@ public class ShowTicketController extends AppCompatActivity {
         setContentView(R.layout.single_ticket);
 
         Bundle b = getIntent().getExtras();
-        if(b != null) {
+        if (b != null) {
             ticketId.add(0, b.getInt("key"));
         } else {
             ticketId.add(0, 1);
