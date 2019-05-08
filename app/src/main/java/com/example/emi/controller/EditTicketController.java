@@ -1,5 +1,6 @@
 package com.example.emi.controller;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -12,17 +13,18 @@ import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import com.example.emi.model.OnJSONResponseCallback;
+import com.example.emi.model.RestUtils;
 import com.example.emi.view.LayoutUtils;
-import com.example.emi.model.APIConnector;
 import com.example.emi.R;
-import com.loopj.android.http.JsonHttpResponseHandler;
 
 import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import cz.msebera.android.httpclient.Header;
 
 public class EditTicketController extends AppCompatActivity {
 
@@ -36,6 +38,7 @@ public class EditTicketController extends AppCompatActivity {
     ArrayList<Integer> ticketId = new ArrayList<>();
     ArrayList<CheckBox> checkBoxesCategories = new ArrayList<>();
     ArrayList<HashMap<String, String>> statusList = new ArrayList<>();
+    Context context;
 
 
     @Override
@@ -50,6 +53,8 @@ public class EditTicketController extends AppCompatActivity {
             Log.e("FehlerID", "keine ID eingetragen");
         }
 
+        context = EditTicketController.this;
+
         inputTitle = findViewById(R.id.textInputEditTextTitle);
         inputProblem = findViewById(R.id.textInputEditTextProblem);
         spinnerStatus = findViewById(R.id.spinnerStatus);
@@ -63,56 +68,76 @@ public class EditTicketController extends AppCompatActivity {
         buttonCancel.setText(R.string.cancel);
 
 
-        APIConnector.get("Status", null, new JsonHttpResponseHandler() {
-
+        RestUtils.getAllItems("Status", context, new OnJSONResponseCallback() {
             @Override
-            public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
-                super.onSuccess(statusCode, headers, response);
+            public void onJSONResponse(JSONArray response) {
 
                 statusList = JSONUtils.jsonToArrayListHash(response);
 
                 LayoutUtils.setDropDownStatusContent(spinnerStatus, EditTicketController.this, statusList);
 
 
-                APIConnector.get("Ticket/" + ticketId.get(0), null, new JsonHttpResponseHandler() {
+                RestUtils.getAllItems("Ticket/" + ticketId.get(0), context, new OnJSONResponseCallback() {
                     @Override
-                    public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
+                    public void onJSONResponse(JSONArray response) {
 
-                        super.onSuccess(statusCode, headers, response);
                         HashMap<String, String> ticketDataMap = JSONUtils.jsonToArrayListHash(response).get(0);
 
                         LayoutUtils.setStaticContent(inputTitle, inputProblem, ticketDataMap, true);
                         LayoutUtils.setSelectedStatus(spinnerStatus, ticketDataMap, statusList);
 
-                        APIConnector.get("Ticket_hat_Kategorie/1/TicketID", null, new JsonHttpResponseHandler() {
-                            @Override
-                            public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
 
-                                super.onSuccess(statusCode, headers, response);
+
+                        RestUtils.getAllItems("Ticket_hat_Kategorie/" + ticketId.get(0) + "/TicketID", context, new OnJSONResponseCallback() {
+                            @Override
+                            public void onJSONResponse(JSONArray response) {
 
                                 final ArrayList<String> selectedCategories = JSONUtils.jsonToArrayListString(response, "KategorieID");
 
-                                APIConnector.get("Kategorie", null, new JsonHttpResponseHandler() {
-
+                                RestUtils.getAllItems("Kategorie", context, new OnJSONResponseCallback() {
                                     @Override
-                                    public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
-
-
-                                        super.onSuccess(statusCode, headers, response);
+                                    public void onJSONResponse(JSONArray response) {
 
                                         HashMap<String, String> categoriesHashMap = JSONUtils.jsonArraytoHashMap(response);
 
-
                                         checkBoxesCategories = LayoutUtils.setSelectedCategoriesCheckBox(checkBoxContainer, EditTicketController.this, categoriesHashMap, selectedCategories);
-                                        int x = checkBoxesCategories.size();
-                                        Log.e("Size", Integer.toString(x));
+
+                                    }
+
+                                    //Unwichtig, da man immer ein Array bekommt
+                                    //Der Fall, dass sich das ändern könnte, sollte jedoch behandelt werden
+                                    @Override
+                                    public void onJSONResponse(String id) {
 
                                     }
                                 });
+
+                            }
+
+                            //Unwichtig, da man immer ein Array bekommt
+                            //Der Fall, dass sich das ändern könnte, sollte jedoch behandelt werden
+                            @Override
+                            public void onJSONResponse(String id) {
+
                             }
                         });
+
+                    }
+
+                    //Unwichtig, da man immer ein Array bekommt
+                    //Der Fall, dass sich das ändern könnte, sollte jedoch behandelt werden
+                    @Override
+                    public void onJSONResponse(String id) {
+
                     }
                 });
+            }
+
+            //Unwichtig, da man immer ein Array bekommt
+            //Der Fall, dass sich das ändern könnte, sollte jedoch behandelt werden
+            @Override
+            public void onJSONResponse(String id) {
+
             }
         });
 
@@ -121,6 +146,8 @@ public class EditTicketController extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
+                Log.e(EditTicketController.this.getLocalClassName(), "Der OK Button wurde benutzt.");
+
                 if (inputTitle.getText().toString().equals("")) {
                     Toast.makeText(EditTicketController.this, "Bitte geben Sie einen Titel für das Ticket ein.",
                             Toast.LENGTH_LONG).show();
@@ -128,24 +155,52 @@ public class EditTicketController extends AppCompatActivity {
                     Toast.makeText(EditTicketController.this, "Bitte geben Sie eine Problembeschreibung ein.",
                             Toast.LENGTH_LONG).show();
                 } else {
-
+                    //Lokale HashMap zur Speicherung der eingegebenen Daten
                     HashMap<String, String> ticketDataMap = LayoutUtils.getStaticContent(inputTitle, inputProblem, EditTicketController.this);
+
+                    //ausgewählten Status herausfinden und die korrespondierende StatusID speichern
                     String statID = LayoutUtils.getStatus(spinnerStatus, statusList);
+
+                    //ausgewählte Kategorie herausfinden und die korrespondierende KategorieID speichern
+                    ArrayList<String> catID = LayoutUtils.getSelectedCategories(checkBoxesCategories);
+
+                    //Daten in die Hashmap schreiben
                     ticketDataMap.put("StatusID", statID);
 
-                    ArrayList<String> selectedCategories = LayoutUtils.getSelectedCategories(checkBoxesCategories);
+                    //Das einzufügende JSONObject wird mit den Daten befüllt und in die entsprechende Tabelle geladen
+                    JSONObject postObject = JSONUtils.prepareDataForPost(ticketDataMap);
 
+                    //Die Kategorien müssen später hinzugefügt werden da es sich um ein JSONArray handeln muss
+                    //Das wird von der API vorgegeben
+                    try {
+                        postObject.put("KategorieID", JSONUtils.stringArrayToJsonArray(catID));
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                    RestUtils.postOneItem(postObject, "Ticket", EditTicketController.this, new OnJSONResponseCallback() {
+                        @Override
+                        public void onJSONResponse(JSONArray response) {
 
-                    // TODO Update Ticket in DB
+                        }
 
-                    Intent toShowTicket = new Intent(EditTicketController.this, ShowTicketController.class);
-                    Bundle b = new Bundle();
-                    b.putInt("key", ticketId.get(0));
-                    toShowTicket.putExtras(b);
-                    startActivity(toShowTicket);
-                    finish();
+                        @Override
+                        public void onJSONResponse(String id) {
+
+                            Intent toShowTicket = new Intent(EditTicketController.this, ShowTicketController.class);
+                            Bundle b = new Bundle();
+                            b.putInt("key", ticketId.get(0));
+                            toShowTicket.putExtras(b);
+                            startActivity(toShowTicket);
+                            finish();
+
+                        }
+                    });
+
                 }
-            }
+
+
+                }
+
         });
 
         buttonCancel.setOnClickListener(new View.OnClickListener() {
