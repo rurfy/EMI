@@ -143,8 +143,11 @@ public class CreateTicketController extends AppCompatActivity {
                             Log.e(CreateTicketController.class.getSimpleName(), "Angelegte ID: " + id);
 
                             Intent showTheTicket = new Intent(CreateTicketController.this, ShowTicketController.class);
-                            showTheTicket.putExtra("key", Integer.getInteger(id));
+                            Bundle b = new Bundle();
+                            b.putInt("key", Integer.parseInt(id));
+                            showTheTicket.putExtras(b);
                             startActivity(showTheTicket);
+
 
                         }
                     });
