@@ -33,7 +33,7 @@ public class MenuController extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                Intent toAllTicketsPage = new Intent(MenuController.this, ShowTicketController.class);
+                Intent toAllTicketsPage = new Intent(MenuController.this, AllTicketsController.class);
                 startActivity(toAllTicketsPage);
 
 
