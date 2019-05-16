@@ -19,31 +19,33 @@
         android:id="@+id/filter"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="16dp"
+        android:layout_marginStart="16dp"
         android:layout_marginTop="32dp"
-        android:text="Kategorie:"
-        android:textColor="@color/colorTextLight"
+        android:text="@string/category"
+        android:textColor="@color/colorTextDark"
         android:textSize="16sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/backgroundTopbar" />
 
     <Spinner
         android:id="@+id/filterTypes"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="16dp"
+        android:layout_marginStart="64dp"
+        android:background="@android:color/white"
+        android:dropDownWidth="wrap_content"
         android:entries="@array/spinnerCategories"
         app:layout_constraintBottom_toBottomOf="@+id/filter"
-        app:layout_constraintLeft_toRightOf="@+id/filter"
+        app:layout_constraintStart_toEndOf="@id/filter"
         app:layout_constraintTop_toTopOf="@+id/filter" />
 
     <TextView
         android:id="@+id/id_caption"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="32dp"
+        android:layout_marginStart="16dp"
         android:layout_marginTop="32dp"
-        android:text="ID"
+        android:text="@string/identificationNumber"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/filter2" />
 
@@ -51,8 +53,10 @@
         android:id="@+id/title_caption"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="128dp"
-        android:text="Titel"
+        android:layout_marginStart="32dp"
+        android:layout_marginEnd="32dp"
+        android:text="@string/title"
+        app:layout_constraintEnd_toStartOf="@id/date_caption"
         app:layout_constraintStart_toEndOf="@+id/id_caption"
         app:layout_constraintTop_toTopOf="@+id/id_caption" />
 
@@ -60,9 +64,9 @@
         android:id="@+id/date_caption"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="96dp"
-        android:text="Datum"
-        app:layout_constraintStart_toEndOf="@+id/title_caption"
+        android:layout_marginEnd="32dp"
+        android:text="@string/date"
+        app:layout_constraintEnd_toStartOf="@id/status_caption"
         app:layout_constraintTop_toTopOf="@+id/title_caption" />
 
     <TextView
@@ -81,7 +85,6 @@
         android:id="@+id/ticketList"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_marginTop="8dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -91,9 +94,9 @@
         android:id="@+id/status_caption"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:text="Status"
-        app:layout_constraintStart_toEndOf="@+id/date_caption"
+        android:layout_marginEnd="16dp"
+        android:text="@string/status"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@+id/date_caption" />
 
     <TextView
@@ -101,15 +104,36 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
-        android:text="TextView"
+        android:text="@string/secondCategory"
         app:layout_constraintStart_toStartOf="@id/filter"
         app:layout_constraintTop_toBottomOf="@+id/filter" />
 
     <Spinner
         android:id="@+id/filterTypes2"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:background="@android:color/white"
+        android:visibility="invisible"
         app:layout_constraintStart_toStartOf="@id/filterTypes"
         app:layout_constraintTop_toTopOf="@+id/filter2" />
+
+    <EditText
+        android:id="@+id/secondCategoryText"
+        android:layout_width="192dp"
+        android:layout_height="wrap_content"
+        android:background="@android:color/white"
+        android:hint="@string/search"
+        android:inputType="textWebEditText"
+        app:layout_constraintBottom_toBottomOf="@+id/filter2"
+        app:layout_constraintStart_toStartOf="@+id/filterTypes"
+        app:layout_constraintTop_toTopOf="@+id/filter2" />
+
+    <Button
+        android:id="@+id/searchButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Suchen"
+        app:layout_constraintBottom_toTopOf="@id/secondCategoryText"
+        app:layout_constraintEnd_toEndOf="@+id/secondCategoryText" />
 
 </android.support.constraint.ConstraintLayout>

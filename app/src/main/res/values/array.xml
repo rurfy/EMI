@@ -1,16 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string-array name="spinnerCategories">
-        <item> </item>
+        <item>ID</item>
         <item>Titel</item>
         <item>Datum</item>
         <item>Status</item>
     </string-array>
-    
-    <string-array name="statusTypes">
-        <item>Ticket eingegangen</item>
-        <item>Ticket in Bearbeitung</item>
-        <item>Ticket geschlossen</item>
-    </string-array>
-
 </resources>

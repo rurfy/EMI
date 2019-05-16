@@ -170,6 +170,19 @@ public class EditTicketController extends AppCompatActivity {
                     //Das einzufügende JSONObject wird mit den Daten befüllt und in die entsprechende Tabelle geladen
                     JSONObject postObject = JSONUtils.prepareDataForPost(ticketDataMap);
 
+
+                    //Die Kategorien müssen später hinzugefügt werden da es sich um ein JSONArray handeln muss
+                    //Das wird von der API vorgegeben
+                    try {
+                        postObject.put("KategorieID", JSONUtils.stringArrayToJsonArray(catID));
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                    RestUtils.postOneItem(postObject, "Ticket", EditTicketController.this, new OnJSONResponseCallback() {
+                        @Override
+                        public void onJSONResponse(JSONArray response) {
+
+
                     // TODO Kategorie
 
                     try {
@@ -192,6 +205,7 @@ public class EditTicketController extends AppCompatActivity {
                             startActivity(toShowTicket);
                             finish();
 
+
                         }
 
                         @Override
@@ -200,10 +214,20 @@ public class EditTicketController extends AppCompatActivity {
 
 
 
+
                         }
                     });
 
 
+                            Intent toShowTicket = new Intent(EditTicketController.this, ShowTicketController.class);
+                            Bundle b = new Bundle();
+                            b.putInt("key", ticketId.get(0));
+                            toShowTicket.putExtras(b);
+                            startActivity(toShowTicket);
+                            finish();
+
+                        }
+                    });
 
                 }
 
