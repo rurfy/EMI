@@ -170,6 +170,7 @@ public class EditTicketController extends AppCompatActivity {
                     //Das einzufügende JSONObject wird mit den Daten befüllt und in die entsprechende Tabelle geladen
                     JSONObject postObject = JSONUtils.prepareDataForPost(ticketDataMap);
 
+
                     //Die Kategorien müssen später hinzugefügt werden da es sich um ein JSONArray handeln muss
                     //Das wird von der API vorgegeben
                     try {
@@ -181,10 +182,42 @@ public class EditTicketController extends AppCompatActivity {
                         @Override
                         public void onJSONResponse(JSONArray response) {
 
+
+                    // TODO Kategorie
+
+                    try {
+                        postObject.put("Typ", "UPDATE");
+                        Log.e("übergebene ID", ticketId.get(0).toString());
+                        postObject.put("TicketID", ticketId.get(0).toString());
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                    RestUtils.updateOneItem(postObject, "Ticket", EditTicketController.this, new OnJSONResponseCallback() {
+                        @Override
+                        public void onJSONResponse(JSONArray response) {
+
+                            Log.e("übergebene ID", ticketId.get(0).toString());
+
+                            Intent toShowTicket = new Intent(EditTicketController.this, ShowTicketController.class);
+                            Bundle b = new Bundle();
+                            b.putInt("key", ticketId.get(0));
+                            toShowTicket.putExtras(b);
+                            startActivity(toShowTicket);
+                            finish();
+
+
                         }
 
                         @Override
                         public void onJSONResponse(String id) {
+
+
+
+
+
+                        }
+                    });
+
 
                             Intent toShowTicket = new Intent(EditTicketController.this, ShowTicketController.class);
                             Bundle b = new Bundle();
