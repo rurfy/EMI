@@ -13,4 +13,7 @@
     <string name="back">Zurück</string>
     <string name="ok">OK</string>
     <string name="cancel">Abbrechen</string>
+    <string name="identificationNumber">ID</string>
+    <string name="secondCategory">Unterkategorie</string>
+    <string name="search">Suchbegriff</string>
 </resources>

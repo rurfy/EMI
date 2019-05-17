@@ -89,7 +89,9 @@ public class EditTicketController extends AppCompatActivity {
                         LayoutUtils.setStaticContent(inputTitle, inputProblem, ticketDataMap, true);
                         LayoutUtils.setSelectedStatus(spinnerStatus, ticketDataMap, statusList);
 
+
                         // Anfragen aller existierenden Kategorien (Rückgabewert KategorieID's mit zugehörigem Titel)
+
                         RestUtils.getAllItems("Ticket_hat_Kategorie/" + ticketId.get(0) + "/TicketID", context, new OnJSONResponseCallback() {
                             @Override
                             public void onJSONResponse(JSONArray response) {
@@ -170,15 +172,16 @@ public class EditTicketController extends AppCompatActivity {
                     //Daten in die Hashmap schreiben
                     ticketDataMap.put("StatusID", statID);
 
+
                     //Das einzufügende JSONObject wird mit den Daten befüllt (ausgenommen der Kategorien)
                     JSONObject postObject = JSONUtils.prepareDataForPost(ticketDataMap);
+
                     try {
-                        postObject.put("Typ", "UPDATE");
-                        Log.e("übergebene ID", ticketId.get(0).toString());
-                        postObject.put("TicketID", ticketId.get(0).toString());
+                        postObject.put("KategorieID", JSONUtils.stringArrayToJsonArray(catID));
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
+
                     // Ticket Daten updaten
                     RestUtils.updateOneItem(postObject, "Ticket", EditTicketController.this, new OnJSONResponseCallback() {
                         @Override
@@ -191,6 +194,7 @@ public class EditTicketController extends AppCompatActivity {
                                 postObject.put("TicketID", ticketId.get(0));
                                 postObject.put ("KategorieID", JSONUtils.stringArrayToJsonArray(catID));
                             } catch (JSONException e) {
+
 
                             }
                             // Updaten der Kategorien eines Tickets
@@ -218,10 +222,12 @@ public class EditTicketController extends AppCompatActivity {
                         //Der Fall, dass sich das ändern könnte, sollte jedoch behandelt werden
                         @Override
                         public void onJSONResponse(String id) {
+
                         }
                     });
                 }
             }
+
         });
 
         buttonCancel.setOnClickListener(new View.OnClickListener() {
