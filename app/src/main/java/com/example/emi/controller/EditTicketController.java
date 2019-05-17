@@ -87,7 +87,6 @@ public class EditTicketController extends AppCompatActivity {
                         LayoutUtils.setSelectedStatus(spinnerStatus, ticketDataMap, statusList);
 
 
-
                         RestUtils.getAllItems("Ticket_hat_Kategorie/" + ticketId.get(0) + "/TicketID", context, new OnJSONResponseCallback() {
                             @Override
                             public void onJSONResponse(JSONArray response) {
@@ -168,7 +167,7 @@ public class EditTicketController extends AppCompatActivity {
                     ticketDataMap.put("StatusID", statID);
 
                     //Das einzufügende JSONObject wird mit den Daten befüllt und in die entsprechende Tabelle geladen
-                    JSONObject postObject = JSONUtils.prepareDataForPost(ticketDataMap);
+                    final JSONObject postObject = JSONUtils.prepareDataForPost(ticketDataMap);
 
 
                     //Die Kategorien müssen später hinzugefügt werden da es sich um ein JSONArray handeln muss
@@ -183,20 +182,38 @@ public class EditTicketController extends AppCompatActivity {
                         public void onJSONResponse(JSONArray response) {
 
 
-                    // TODO Kategorie
+                            // TODO Kategorie
 
-                    try {
-                        postObject.put("Typ", "UPDATE");
-                        Log.e("übergebene ID", ticketId.get(0).toString());
-                        postObject.put("TicketID", ticketId.get(0).toString());
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-                    RestUtils.updateOneItem(postObject, "Ticket", EditTicketController.this, new OnJSONResponseCallback() {
-                        @Override
-                        public void onJSONResponse(JSONArray response) {
+                            try {
+                                postObject.put("Typ", "UPDATE");
+                                Log.e("übergebene ID", ticketId.get(0).toString());
+                                postObject.put("TicketID", ticketId.get(0).toString());
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                            RestUtils.updateOneItem(postObject, "Ticket", EditTicketController.this, new OnJSONResponseCallback() {
+                                @Override
+                                public void onJSONResponse(JSONArray response) {
 
-                            Log.e("übergebene ID", ticketId.get(0).toString());
+                                    Log.e("übergebene ID", ticketId.get(0).toString());
+
+                                    Intent toShowTicket = new Intent(EditTicketController.this, ShowTicketController.class);
+                                    Bundle b = new Bundle();
+                                    b.putInt("key", ticketId.get(0));
+                                    toShowTicket.putExtras(b);
+                                    startActivity(toShowTicket);
+                                    finish();
+
+
+                                }
+
+                                @Override
+                                public void onJSONResponse(String id) {
+
+
+                                }
+                            });
+
 
                             Intent toShowTicket = new Intent(EditTicketController.this, ShowTicketController.class);
                             Bundle b = new Bundle();
@@ -204,35 +221,19 @@ public class EditTicketController extends AppCompatActivity {
                             toShowTicket.putExtras(b);
                             startActivity(toShowTicket);
                             finish();
-
 
                         }
 
                         @Override
                         public void onJSONResponse(String id) {
 
-
-
-
-
-                        }
-                    });
-
-
-                            Intent toShowTicket = new Intent(EditTicketController.this, ShowTicketController.class);
-                            Bundle b = new Bundle();
-                            b.putInt("key", ticketId.get(0));
-                            toShowTicket.putExtras(b);
-                            startActivity(toShowTicket);
-                            finish();
-
                         }
                     });
 
                 }
 
 
-                }
+            }
 
         });
 
