@@ -38,6 +38,7 @@ public class EditTicketController extends AppCompatActivity {
     ArrayList<Integer> ticketId = new ArrayList<>();
     ArrayList<CheckBox> checkBoxesCategories = new ArrayList<>();
     ArrayList<HashMap<String, String>> statusList = new ArrayList<>();
+    ArrayList<String> catID = new ArrayList<>();
     Context context;
 
 
@@ -67,25 +68,29 @@ public class EditTicketController extends AppCompatActivity {
         buttonCancel = findViewById(R.id.buttonRight);
         buttonCancel.setText(R.string.cancel);
 
-
+        // Abfragen aller existierenden Stati
         RestUtils.getAllItems("Status", context, new OnJSONResponseCallback() {
             @Override
             public void onJSONResponse(JSONArray response) {
 
                 statusList = JSONUtils.jsonToArrayListHash(response);
 
+                // Stati als Auswahl in die Drop-Down-Liste geben
                 LayoutUtils.setDropDownStatusContent(spinnerStatus, EditTicketController.this, statusList);
 
-
+                // Abfragen der Daten des geforderten Tickets
                 RestUtils.getAllItems("Ticket/" + ticketId.get(0), context, new OnJSONResponseCallback() {
                     @Override
                     public void onJSONResponse(JSONArray response) {
 
                         HashMap<String, String> ticketDataMap = JSONUtils.jsonToArrayListHash(response).get(0);
 
+                        // Anzeigen von Titel, Problembeschreibung und Status
                         LayoutUtils.setStaticContent(inputTitle, inputProblem, ticketDataMap, true);
                         LayoutUtils.setSelectedStatus(spinnerStatus, ticketDataMap, statusList);
 
+
+                        // Anfragen aller existierenden Kategorien (Rückgabewert KategorieID's mit zugehörigem Titel)
 
                         RestUtils.getAllItems("Ticket_hat_Kategorie/" + ticketId.get(0) + "/TicketID", context, new OnJSONResponseCallback() {
                             @Override
@@ -93,12 +98,14 @@ public class EditTicketController extends AppCompatActivity {
 
                                 final ArrayList<String> selectedCategories = JSONUtils.jsonToArrayListString(response, "KategorieID");
 
+                                // Anfragen aller existierenden Kategorien (Rückgabewert KategorieID's mit zugehörigem Titel)
                                 RestUtils.getAllItems("Kategorie", context, new OnJSONResponseCallback() {
                                     @Override
                                     public void onJSONResponse(JSONArray response) {
 
                                         HashMap<String, String> categoriesHashMap = JSONUtils.jsonArraytoHashMap(response);
 
+                                        // Kategorien als Checkboxen darstellen
                                         checkBoxesCategories = LayoutUtils.setSelectedCategoriesCheckBox(checkBoxContainer, EditTicketController.this, categoriesHashMap, selectedCategories);
 
                                     }
@@ -145,8 +152,7 @@ public class EditTicketController extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                Log.e(EditTicketController.this.getLocalClassName(), "Der OK Button wurde benutzt.");
-
+                // Verhindern, dass der Nutzer die Felder Titel oder Problembeschreibung leer lässt
                 if (inputTitle.getText().toString().equals("")) {
                     Toast.makeText(EditTicketController.this, "Bitte geben Sie einen Titel für das Ticket ein.",
                             Toast.LENGTH_LONG).show();
@@ -161,42 +167,42 @@ public class EditTicketController extends AppCompatActivity {
                     String statID = LayoutUtils.getStatus(spinnerStatus, statusList);
 
                     //ausgewählte Kategorie herausfinden und die korrespondierende KategorieID speichern
-                    ArrayList<String> catID = LayoutUtils.getSelectedCategories(checkBoxesCategories);
+                     catID = LayoutUtils.getSelectedCategories(checkBoxesCategories);
 
                     //Daten in die Hashmap schreiben
                     ticketDataMap.put("StatusID", statID);
 
-                    //Das einzufügende JSONObject wird mit den Daten befüllt und in die entsprechende Tabelle geladen
-                    final JSONObject postObject = JSONUtils.prepareDataForPost(ticketDataMap);
 
+                    //Das einzufügende JSONObject wird mit den Daten befüllt (ausgenommen der Kategorien)
+                    JSONObject postObject = JSONUtils.prepareDataForPost(ticketDataMap);
 
-                    //Die Kategorien müssen später hinzugefügt werden da es sich um ein JSONArray handeln muss
-                    //Das wird von der API vorgegeben
                     try {
                         postObject.put("KategorieID", JSONUtils.stringArrayToJsonArray(catID));
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
-                    RestUtils.postOneItem(postObject, "Ticket", EditTicketController.this, new OnJSONResponseCallback() {
+
+                    // Ticket Daten updaten
+                    RestUtils.updateOneItem(postObject, "Ticket", EditTicketController.this, new OnJSONResponseCallback() {
                         @Override
                         public void onJSONResponse(JSONArray response) {
 
-
-                            // TODO Kategorie
-
+                            //Das einzufügende JSONObject wird mit den ausgewählten Kategorien befüllt
+                            JSONObject postObject = new JSONObject();
                             try {
                                 postObject.put("Typ", "UPDATE");
-                                Log.e("übergebene ID", ticketId.get(0).toString());
-                                postObject.put("TicketID", ticketId.get(0).toString());
+                                postObject.put("TicketID", ticketId.get(0));
+                                postObject.put ("KategorieID", JSONUtils.stringArrayToJsonArray(catID));
                             } catch (JSONException e) {
-                                e.printStackTrace();
+
+
                             }
-                            RestUtils.updateOneItem(postObject, "Ticket", EditTicketController.this, new OnJSONResponseCallback() {
+                            // Updaten der Kategorien eines Tickets
+                            RestUtils.updateOneItem(postObject, "Ticket_hat_Kategorie", EditTicketController.this, new OnJSONResponseCallback() {
                                 @Override
                                 public void onJSONResponse(JSONArray response) {
 
-                                    Log.e("übergebene ID", ticketId.get(0).toString());
-
+                                    // Wechseln zur View zum Anzeigen des Tickets, Übergeben der TicketID
                                     Intent toShowTicket = new Intent(EditTicketController.this, ShowTicketController.class);
                                     Bundle b = new Bundle();
                                     b.putInt("key", ticketId.get(0));
@@ -204,35 +210,22 @@ public class EditTicketController extends AppCompatActivity {
                                     startActivity(toShowTicket);
                                     finish();
 
-
                                 }
-
+                                //Unwichtig, da man immer ein Array bekommt
+                                //Der Fall, dass sich das ändern könnte, sollte jedoch behandelt werden
                                 @Override
                                 public void onJSONResponse(String id) {
-
-
                                 }
                             });
-
-
-                            Intent toShowTicket = new Intent(EditTicketController.this, ShowTicketController.class);
-                            Bundle b = new Bundle();
-                            b.putInt("key", ticketId.get(0));
-                            toShowTicket.putExtras(b);
-                            startActivity(toShowTicket);
-                            finish();
-
                         }
-
+                        //Unwichtig, da man immer ein Array bekommt
+                        //Der Fall, dass sich das ändern könnte, sollte jedoch behandelt werden
                         @Override
                         public void onJSONResponse(String id) {
 
                         }
                     });
-
                 }
-
-
             }
 
         });
@@ -241,6 +234,7 @@ public class EditTicketController extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
+                // Wechseln zur View zum Anzeigen des Tickets, Übergeben der TicketID
                 Intent toShowTicket = new Intent(EditTicketController.this, ShowTicketController.class);
                 Bundle b = new Bundle();
                 b.putInt("key", ticketId.get(0));
