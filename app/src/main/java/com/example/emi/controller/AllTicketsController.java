@@ -37,8 +37,10 @@ public class AllTicketsController extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.all_tickets);
 
-        //Zurückpfeil unsichtbar machen, da er in dieser View keinen Sinn macht
+        //ListView initialisieren
         lvAllTickets = (ListView) findViewById(R.id.ticketList);
+
+        //Zurückpfeil unsichtbar machen, da er in dieser View keinen Sinn macht
         ImageView back_arrow = findViewById(R.id.back_arrow);
         back_arrow.setVisibility(View.INVISIBLE);
 

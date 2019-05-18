@@ -7,8 +7,10 @@
     <string name="status">Status</string>
     <string name="creator">Ersteller</string>
     <string name="date">Datum</string>
+    <string name="menu">Hauptmenü</string>
     <string name="createTicket">Ticket erstellen</string>
     <string name="allTickets">Alle Tickets</string>
+    <string name="editTicket">Ticket bearbeiten</string>
     <string name="edit">Bearbeiten</string>
     <string name="back">Zurück</string>
     <string name="ok">OK</string>
@@ -16,4 +18,5 @@
     <string name="identificationNumber">ID</string>
     <string name="secondCategory">Unterkategorie</string>
     <string name="search">Suchbegriff</string>
+    <string name="reset">Zurücksetzen</string>
 </resources>

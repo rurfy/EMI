@@ -8,6 +8,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -49,11 +50,33 @@ public class CreateTicketController extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.single_ticket);
 
+        //Zurückpfeil unsichtbar machen, da er in dieser View keinen Sinn macht
+        ImageView back_arrow = findViewById(R.id.back_arrow);
+        back_arrow.setVisibility(View.INVISIBLE);
+
+        //Text vom Titel anpassen
+        TextView title = (TextView) findViewById(R.id.viewCaption);
+        title.setText(R.string.createTicket);
+
+        //Intent auf das Haus setzen
+        ImageView house = findViewById(R.id.home);
+        house.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //Nutzerausgabe, dass abgebrochen wurde
+                Toast.makeText(CreateTicketController.this, "Die Erstellung des Tickets wurde abgebrochen",
+                        Toast.LENGTH_LONG).show();
+
+                Intent backToHome = new Intent(CreateTicketController.this, MenuController.class);
+                startActivity(backToHome);
+            }
+        });
+
         //Buttons initialisieren
         buttonCreate = findViewById(R.id.buttonLeft);
         buttonCreate.setText(R.string.ok);
         buttonCancel = findViewById(R.id.buttonRight);
-        buttonCancel.setText(R.string.cancel);
+        buttonCancel.setText(R.string.reset);
 
         // Input Felder mit der xml-Datei verknüpft
         inputTitle = findViewById(R.id.textInputEditTextTitle);
@@ -168,12 +191,9 @@ public class CreateTicketController extends AppCompatActivity {
 
                 checkBoxContainer.setSelected(false);
 
-                //Nutzerausgabe, dass abgebrochen wurde
-                Toast.makeText(CreateTicketController.this, "Die Erstellung des Tickets wurde abgebrochen",
-                        Toast.LENGTH_LONG).show();
-
             }
         });
+
     }
 
 

@@ -9,6 +9,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -41,6 +42,24 @@ public class ShowTicketController extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.single_ticket);
+
+        //Zurückpfeil unsichtbar machen, da er in dieser View keinen Sinn macht
+        ImageView back_arrow = findViewById(R.id.back_arrow);
+        back_arrow.setVisibility(View.INVISIBLE);
+
+        //Text vom Titel anpassen
+        TextView title = (TextView) findViewById(R.id.viewCaption);
+        title.setText("");
+
+        //Intent auf das Haus setzen
+        ImageView house = findViewById(R.id.home);
+        house.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent backToHome = new Intent(ShowTicketController.this, MenuController.class);
+                startActivity(backToHome);
+            }
+        });
 
         // Auslesen der ID aus den übertragenen Parametern
         Bundle b = getIntent().getExtras();
@@ -140,8 +159,7 @@ public class ShowTicketController extends AppCompatActivity {
                 public void onClick(View v) {
 
                     // Wechseln zur View für die Anzeige aller Tickets
-                    Intent toAllTicketsPage = new Intent(context, MenuController.class);
-                    startActivity(toAllTicketsPage);
+                    finish();
                 }
             });
         } else {

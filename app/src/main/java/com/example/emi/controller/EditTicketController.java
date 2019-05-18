@@ -9,8 +9,11 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.emi.model.OnJSONResponseCallback;
@@ -53,6 +56,24 @@ public class EditTicketController extends AppCompatActivity {
         } else {
             Log.e("FehlerID", "keine ID eingetragen");
         }
+
+        //Zurückpfeil unsichtbar machen, da er in dieser View keinen Sinn macht
+        ImageView back_arrow = findViewById(R.id.back_arrow);
+        back_arrow.setVisibility(View.INVISIBLE);
+
+        //Text vom Titel anpassen
+        TextView title = (TextView) findViewById(R.id.viewCaption);
+        title.setText(R.string.editTicket);
+
+        //Intent auf das Haus setzen
+        ImageView house = findViewById(R.id.home);
+        house.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent backToHome = new Intent(EditTicketController.this, MenuController.class);
+                startActivity(backToHome);
+            }
+        });
 
         context = EditTicketController.this;
 
