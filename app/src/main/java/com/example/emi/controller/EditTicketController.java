@@ -11,7 +11,6 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -31,18 +30,17 @@ import java.util.HashMap;
 
 public class EditTicketController extends AppCompatActivity {
 
-    Button buttonCreate;
-    Button buttonCancel;
-    EditText inputTitle;
-    EditText inputCreator;
-    EditText inputProblem;
-    Spinner spinnerStatus;
-    LinearLayout checkBoxContainer;
-    ArrayList<Integer> ticketId = new ArrayList<>();
-    ArrayList<CheckBox> checkBoxesCategories = new ArrayList<>();
-    ArrayList<HashMap<String, String>> statusList = new ArrayList<>();
-    ArrayList<String> catID = new ArrayList<>();
-    Context context;
+    private Button buttonCreate;
+    private Button buttonCancel;
+    private EditText inputTitle;
+    private EditText inputProblem;
+    private Spinner spinnerStatus;
+    private LinearLayout checkBoxContainer;
+    private ArrayList<Integer> ticketId = new ArrayList<>();
+    private ArrayList<CheckBox> checkBoxesCategories = new ArrayList<>();
+    private ArrayList<HashMap<String, String>> statusList = new ArrayList<>();
+    private ArrayList<String> catID = new ArrayList<>();
+    private Context context;
 
 
     @Override
@@ -215,7 +213,7 @@ public class EditTicketController extends AppCompatActivity {
                                 postObject.put("TicketID", ticketId.get(0));
                                 postObject.put ("KategorieID", JSONUtils.stringArrayToJsonArray(catID));
                             } catch (JSONException e) {
-
+                                e.printStackTrace();
 
                             }
                             // Updaten der Kategorien eines Tickets

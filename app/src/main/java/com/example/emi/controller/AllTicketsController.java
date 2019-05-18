@@ -27,10 +27,10 @@ import java.util.HashMap;
 
 public class AllTicketsController extends AppCompatActivity {
 
-    ArrayList<HashMap<String, String>> list;
-    ListView lvAllTickets;
-    ListAdapter adapter;
-    EditText search;
+    private ArrayList<HashMap<String, String>> list;
+    private ListView lvAllTickets;
+    private ListAdapter adapter;
+    private EditText search;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

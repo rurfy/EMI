@@ -31,8 +31,6 @@ public class LayoutUtils {
         inputTitle.setText(ticketDataMap.get("Titel"));
         inputTitle.setEnabled(enabled);
 
-        //inputCreator.setText(ticketDataMap.get("Ersteller").toString());
-        //inputCreator.setEnabled(enabled);
 
         inputProblem.setText(ticketDataMap.get("Problembeschreibung"));
         inputProblem.setEnabled(enabled);

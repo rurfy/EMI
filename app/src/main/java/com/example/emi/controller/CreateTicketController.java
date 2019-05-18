@@ -16,10 +16,8 @@ import android.widget.Toast;
 
 import com.example.emi.model.OnJSONResponseCallback;
 import com.example.emi.view.LayoutUtils;
-import com.example.emi.model.APIConnector;
 import com.example.emi.model.RestUtils;
 import com.example.emi.R;
-import com.loopj.android.http.JsonHttpResponseHandler;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -28,22 +26,18 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import cz.msebera.android.httpclient.Header;
-
 public class CreateTicketController extends AppCompatActivity {
 
-    Button buttonCreate;
-    Button buttonCancel;
-    EditText inputTitle;
-    EditText inputCreator;
-    EditText inputProblem;
-    TextView textViewStatus;
-    Spinner spinnerStatus;
-    LinearLayout checkBoxContainer;
+    private Button buttonCreate;
+    private Button buttonCancel;
+    private EditText inputTitle;
+    private EditText inputProblem;
+    private Spinner spinnerStatus;
+    private LinearLayout checkBoxContainer;
 
-    ArrayList<HashMap<String, String>> statusList;
-    HashMap<String, String> categoryMap;
-    ArrayList<CheckBox> checkers;
+    private ArrayList<HashMap<String, String>> statusList;
+    private HashMap<String, String> categoryMap;
+    private ArrayList<CheckBox> checkers;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

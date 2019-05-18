@@ -1,6 +1,5 @@
 <resources>
     <string name="app_name">EMI</string>
-    <string name="id">Ticketnummer</string>
     <string name="title">Titel</string>
     <string name="problem">Problembeschreibung</string>
     <string name="category">Kategorie</string>
@@ -16,7 +15,6 @@
     <string name="ok">OK</string>
     <string name="cancel">Abbrechen</string>
     <string name="identificationNumber">ID</string>
-    <string name="secondCategory">Unterkategorie</string>
     <string name="search">Suchbegriff</string>
     <string name="reset">Zurücksetzen</string>
 </resources>

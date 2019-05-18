@@ -27,15 +27,14 @@ import java.util.HashMap;
 
 public class ShowTicketController extends AppCompatActivity {
 
-    Button buttonEdit;
-    Button buttonBack;
-    EditText inputTitle;
-    EditText inputCreator;
-    EditText inputProblem;
-    TextView textViewStatus;
-    LinearLayout categorieLayout;
-    ArrayList<Integer> ticketId = new ArrayList<>();
-    Context context;
+    private Button buttonEdit;
+    private Button buttonBack;
+    private EditText inputTitle;
+    private EditText inputProblem;
+    private TextView textViewStatus;
+    private LinearLayout categorieLayout;
+    private ArrayList<Integer> ticketId = new ArrayList<>();
+    private Context context;
 
 
     @Override
