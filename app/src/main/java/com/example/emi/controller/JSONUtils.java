@@ -27,6 +27,7 @@ public class JSONUtils {
 
     }
 
+    //Eine gesamte ArrayList<String> aus einem JSONArray erstellen
     public static ArrayList<String> jsonToArrayListString(JSONArray jsonArray, String attribute) {
 
         ArrayList<String> arrayList = new ArrayList<>();
@@ -44,7 +45,7 @@ public class JSONUtils {
 
     }
 
-    //Eine einzige Hashmap vom Typ !!!Ticket!!! aus einem JSONObject erstellen
+    //Eine HashMap<String, String> aus einem JSONObject erstellen
     public static HashMap<String, String> jsonObjectToHashMap(JSONObject jsonObject) {
         HashMap<String, String> hashMap = new HashMap<>();
 
@@ -63,6 +64,7 @@ public class JSONUtils {
         return hashMap;
     }
 
+    //Eine HashMap<String, String> aus einem JSONArray erstellen
     public static HashMap<String, String> jsonArraytoHashMap (JSONArray jsonArray) {
         HashMap <String, String> hashMap = new HashMap<>();
 
@@ -79,6 +81,7 @@ public class JSONUtils {
         return hashMap;
     }
 
+    //Ein JSONObject aus einer HashMap<String, String> erstellen
     public static JSONObject prepareDataForPost(HashMap<String,String> hashMap) {
         JSONObject jsonParams = new JSONObject();
         try {
@@ -93,6 +96,15 @@ public class JSONUtils {
             e.printStackTrace();
         }
         return jsonParams;
+    }
+
+    //Ein JSONArray aus einer ArrayList<String> erstellen
+    public static JSONArray stringArrayToJsonArray(ArrayList<String> categories) {
+        JSONArray array = new JSONArray();
+        for (String category: categories) {
+            array.put(category);
+        }
+        return array;
     }
 
 }

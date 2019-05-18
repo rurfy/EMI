@@ -2,7 +2,6 @@
 <android.support.constraint.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -16,43 +15,25 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/filter"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="16dp"
-        android:layout_marginTop="32dp"
-        android:text="Kategorie:"
-        android:textColor="@color/colorTextLight"
-        android:textSize="16sp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/backgroundTopbar" />
-
-    <Spinner
-        android:id="@+id/filterTypes"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="16dp"
-        android:entries="@array/spinnerCategories"
-        app:layout_constraintBottom_toBottomOf="@+id/filter"
-        app:layout_constraintLeft_toRightOf="@+id/filter"
-        app:layout_constraintTop_toTopOf="@+id/filter" />
-
-    <TextView
         android:id="@+id/id_caption"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="32dp"
+        android:layout_marginStart="16dp"
         android:layout_marginTop="32dp"
-        android:text="ID"
+        android:text="@string/identificationNumber"
+        android:textSize="18sp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/filter2" />
+        app:layout_constraintTop_toBottomOf="@id/searchText" />
 
     <TextView
         android:id="@+id/title_caption"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="128dp"
-        android:text="Titel"
+        android:layout_marginStart="32dp"
+        android:layout_marginEnd="36dp"
+        android:text="@string/title"
+        android:textSize="18sp"
+        app:layout_constraintEnd_toStartOf="@id/date_caption"
         app:layout_constraintStart_toEndOf="@+id/id_caption"
         app:layout_constraintTop_toTopOf="@+id/id_caption" />
 
@@ -60,9 +41,10 @@
         android:id="@+id/date_caption"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="96dp"
-        android:text="Datum"
-        app:layout_constraintStart_toEndOf="@+id/title_caption"
+        android:layout_marginEnd="32dp"
+        android:text="@string/date"
+        android:textSize="18sp"
+        app:layout_constraintEnd_toStartOf="@id/status_caption"
         app:layout_constraintTop_toTopOf="@+id/title_caption" />
 
     <TextView
@@ -80,8 +62,7 @@
     <ListView
         android:id="@+id/ticketList"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
+        android:layout_height="0dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -91,25 +72,22 @@
         android:id="@+id/status_caption"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:text="Status"
-        app:layout_constraintStart_toEndOf="@+id/date_caption"
+        android:layout_marginEnd="16dp"
+        android:text="@string/status"
+        android:textSize="18sp"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@+id/date_caption" />
 
-    <TextView
-        android:id="@+id/filter2"
-        android:layout_width="wrap_content"
+    <EditText
+        android:id="@+id/searchText"
+        android:layout_width="256dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:text="TextView"
-        app:layout_constraintStart_toStartOf="@id/filter"
-        app:layout_constraintTop_toBottomOf="@+id/filter" />
-
-    <Spinner
-        android:id="@+id/filterTypes2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constraintStart_toStartOf="@id/filterTypes"
-        app:layout_constraintTop_toTopOf="@+id/filter2" />
+        android:layout_marginTop="32dp"
+        android:background="@android:color/white"
+        android:hint="@string/search"
+        android:inputType="textWebEditText"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/backgroundTopbar" />
 
 </android.support.constraint.ConstraintLayout>
