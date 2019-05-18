@@ -2,68 +2,56 @@ package com.example.emi.controller;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.BaseAdapter;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
-import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.emi.R;
 import com.example.emi.model.OnJSONResponseCallback;
 import com.example.emi.model.RestUtils;
-import com.example.emi.view.LayoutUtils;
 
 import org.json.JSONArray;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import static com.loopj.android.http.AsyncHttpClient.log;
-
 public class AllTicketsController extends AppCompatActivity {
 
-    ArrayList<HashMap<String, String>> list;
-    ArrayAdapter<String> list2;
-    ListView lvAllTickets;
-    ArrayList<HashMap<String,String>> statusList;
-    Spinner filterTypes;
-    Spinner categories;
-    String selectedCategory;
-    EditText secondCategoryText;
-    ArrayAdapter<String> adapter;
+    private ArrayList<HashMap<String, String>> list;
+    private ListView lvAllTickets;
+    private ListAdapter adapter;
+    private EditText search;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.all_tickets);
 
+        //ListView initialisieren
         lvAllTickets = (ListView) findViewById(R.id.ticketList);
+
+        //Zurückpfeil unsichtbar machen, da er in dieser View keinen Sinn macht
         ImageView back_arrow = findViewById(R.id.back_arrow);
         back_arrow.setVisibility(View.INVISIBLE);
 
+        //Text vom Titel anpassen
         TextView title = (TextView) findViewById(R.id.viewCaption);
         title.setText(R.string.allTickets);
 
-        categories = (Spinner) findViewById(R.id.filterTypes);
-        filterTypes = (Spinner) findViewById(R.id.filterTypes2);
-        secondCategoryText = (EditText) findViewById(R.id.secondCategoryText);
-        Button searchButton = (Button) findViewById(R.id.searchButton);
+        //Suchleiste iniatilisieren
+        search = (EditText) findViewById(R.id.searchText);
 
+        //Intent auf das Haus setzen
         ImageView house = findViewById(R.id.home);
         house.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -73,6 +61,7 @@ public class AllTicketsController extends AppCompatActivity {
             }
         });
 
+        //Intent auf die einzelnen List Elemente setzen und ID mitgeben
         lvAllTickets.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -82,32 +71,40 @@ public class AllTicketsController extends AppCompatActivity {
             }
         });
 
-
+        //wird ausgeführt sobald die die XML geladen wird
+        //holt sich alle Informationen aus der DB und schreibt sie entsprechend in die ListView
         RestUtils.getAllItems("Ticket", AllTicketsController.this, new OnJSONResponseCallback() {
             @Override
             public void onJSONResponse(JSONArray response) {
+
+                //lokale Liste wird gefüllt
                 list = JSONUtils.jsonToArrayListHash(response);
-                //list2 = JSONUtils.jsonToArrayListString(response);
-                adapter = new ArrayAdapter<String>(AllTicketsController.this, R.layout.all_tickets_item, R.id.ticketList, new String[]{"ID","Titel", "Datum"});
 
-                //adapter = new SimpleAdapter(AllTicketsController.this, list, R.layout.all_tickets_item,
-                //        new String[]{"ID", "Titel", "Datum"}, new int[]{R.id.itemID, R.id.itemTitle, R.id.itemDate}){
-                /*    @Override
+                //der Adapter schreibt die ID, den Titel, das Datum und den Status in "all_tickets_item.xml"
+                //wenn ein Datensatz komplett in "all_tickets_item.xml" geschrieben wurde, wird dieses Item der ListView hinzugefügt
+                //danach wird ein neues Item mit einem neuen Datensatz beschrieben, bis es keine Datensätze mehr gibt
+                adapter = new SimpleAdapter(AllTicketsController.this, list, R.layout.all_tickets_item,
+                        new String[]{"ID", "Titel", "Datum"}, new int[]{R.id.itemID, R.id.itemTitle, R.id.itemDate}) {
+
+                    //der Text vom Status wird in ein Ampelsystem umgewandelt
+                    @Override
                     public View getView(int position, View convertView, ViewGroup parent) {
-                        View row = super.getView(position,convertView,parent);
+                        View row = super.getView(position, convertView, parent);
 
-                        if(row==null){
-                            LayoutInflater inflater=getLayoutInflater();
-                            row=inflater.inflate(R.layout.all_tickets_item, parent, false);
+                        if (row == null) {
+                            LayoutInflater inflater = getLayoutInflater();
+                            row = inflater.inflate(R.layout.all_tickets_item, parent, false);
                         }
 
-                        TextView label=(TextView)row.findViewById(R.id.itemStatus);
+                        //der Status wird initailisiert
+                        TextView label = (TextView) row.findViewById(R.id.itemStatus);
 
-                        if(list.get(position).get("StatusID").equals("10")){
+                        //je nach ID erhält der Status eine andere Farbe
+                        if (list.get(position).get("StatusID").equals("10")) {
                             label.setBackgroundResource(R.drawable.circle_red);
-                        }else if(list.get(position).get("StatusID").equals("50")){
+                        } else if (list.get(position).get("StatusID").equals("50")) {
                             label.setBackgroundResource(R.drawable.circle_yellow);
-                        }else{
+                        } else {
                             label.setBackgroundResource(R.drawable.circle_green);
                         }
                         return row;
@@ -115,37 +112,26 @@ public class AllTicketsController extends AppCompatActivity {
                 };
                 lvAllTickets.setAdapter(adapter);
 
-                secondCategoryText.addTextChangedListener(new TextWatcher() {
+                //Errichten eines Listeners der nach dem Suchbegriff sucht
+                search.addTextChangedListener(new TextWatcher() {
+                    //unwichtig, da bei jeder Änderung des Textes gesucht werden soll
                     @Override
                     public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
                     }
 
+                    //durch die Methode onTextChanged wird sofort bei jeder Änderung des Wortes nach dem neuen Begriff gesucht
                     @Override
                     public void onTextChanged(CharSequence s, int start, int before, int count) {
-                        AllTicketsController.this.adapter.getFilter().filter(s);
+                        ((SimpleAdapter) AllTicketsController.this.adapter).getFilter().filter(search.getText().toString().toLowerCase());
                     }
 
+                    //unwichtig, da bei jeder Änderung des Textes gesucht werden soll
                     @Override
                     public void afterTextChanged(Editable s) {
 
                     }
                 });
-            }*/
-
-            @Override
-            public void onJSONResponse(String id) {
-
-            }
-        });
-
-        //Status aus der DB lesen und sowohl in den Spinner, als auch in eine ArrayList schreiben
-        RestUtils.getAllItems("Status", AllTicketsController.this, new OnJSONResponseCallback() {
-            @Override
-            public void onJSONResponse(JSONArray response) {
-
-                statusList = JSONUtils.jsonToArrayListHash(response);
-                LayoutUtils.setDropDownStatusContent(filterTypes, AllTicketsController.this, statusList);
             }
 
             //Unwichtig, da man immer ein Array bekommt
@@ -156,44 +142,5 @@ public class AllTicketsController extends AppCompatActivity {
             }
         });
 
-        categories.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                selectedCategory = categories.getSelectedItem().toString();
-
-                if(selectedCategory.equals("Status")){
-                   if(filterTypes.getVisibility()==View.INVISIBLE){
-                       filterTypes.setVisibility(View.VISIBLE);
-                       secondCategoryText.setVisibility(View.INVISIBLE);
-                   }
-                }else{
-                    if(filterTypes.getVisibility()==View.VISIBLE){
-                        filterTypes.setVisibility(View.INVISIBLE);
-                        secondCategoryText.setVisibility(View.VISIBLE);
-                    }
-                }
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-
-            }
-        });
-
-        searchButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(secondCategoryText.getVisibility()==View.VISIBLE){
-                    if(secondCategoryText.getText().toString().equals("")) {
-                        Toast.makeText(AllTicketsController.this, "Bitte füllen Sie die Suchleiste aus", Toast.LENGTH_SHORT).show();
-                    }else{
-
-                    }
-                }else{
-
-                }
-
-            }
-        });
     }
 }

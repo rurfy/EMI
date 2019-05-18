@@ -31,8 +31,6 @@ public class LayoutUtils {
         inputTitle.setText(ticketDataMap.get("Titel"));
         inputTitle.setEnabled(enabled);
 
-        //inputCreator.setText(ticketDataMap.get("Ersteller").toString());
-        //inputCreator.setEnabled(enabled);
 
         inputProblem.setText(ticketDataMap.get("Problembeschreibung"));
         inputProblem.setEnabled(enabled);
@@ -222,6 +220,7 @@ public class LayoutUtils {
 
         String status = spinnerStatus.getSelectedItem().toString();
         String statID = "";
+        // Auslesen der ausgewählten Kategorie
         for (int i = 0; i < statusList.size(); i++) {
             if (status.equals(statusList.get(i).get("Bezeichnung"))) {
                 statID = statusList.get(i).get("ID");
@@ -236,6 +235,7 @@ public class LayoutUtils {
     // Verwendung: EditTicketController, CreateTicketController
     public static ArrayList<String> getSelectedCategories(ArrayList<CheckBox> checkBoxesArrayList) {
 
+        // Alle Angehakten Checkboxen werden in eine ArrayList geschrieben
         ArrayList<String> selectedCategories = new ArrayList<>();
         int pos = 0;
         for (int j = 0; j < checkBoxesArrayList.size(); j++) {

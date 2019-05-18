@@ -5,6 +5,8 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.example.emi.R;
 
@@ -14,6 +16,19 @@ public class MenuController extends AppCompatActivity {
     protected void onCreate(Bundle savedBundle) {
         super.onCreate(savedBundle);
         setContentView(R.layout.main_menu);
+
+        //Zurückpfeil unsichtbar machen, da er in dieser View keinen Sinn macht
+        ImageView back_arrow = findViewById(R.id.back_arrow);
+        back_arrow.setVisibility(View.INVISIBLE);
+
+        //Text vom Titel anpassen
+        TextView title = (TextView) findViewById(R.id.viewCaption);
+        title.setText(R.string.menu);
+
+        ///Haus unsichtbar machen, da er in dieser View keinen Sinn macht
+        ImageView house = findViewById(R.id.home);
+        house.setVisibility(View.INVISIBLE);
+
 
         Button createTicket = findViewById(R.id.createTicketButton);
         Button allTickets = findViewById(R.id.viewAllTicketsButton);
