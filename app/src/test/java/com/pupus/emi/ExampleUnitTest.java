@@ -1,4 +1,4 @@
-package com.example.emi;
+package com.pupus.emi;
 
 import org.junit.Test;
 

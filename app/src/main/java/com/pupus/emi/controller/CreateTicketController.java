@@ -1,4 +1,4 @@
-package com.example.emi.controller;
+package com.pupus.emi.controller;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -14,10 +14,10 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.emi.model.OnJSONResponseCallback;
-import com.example.emi.view.LayoutUtils;
-import com.example.emi.model.RestUtils;
-import com.example.emi.R;
+import com.pupus.emi.model.OnJSONResponseCallback;
+import com.pupus.emi.view.LayoutUtils;
+import com.pupus.emi.model.RestUtils;
+import com.pupus.emi.R;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -28,8 +28,7 @@ import java.util.HashMap;
 
 public class CreateTicketController extends AppCompatActivity {
 
-    private Button buttonCreate;
-    private Button buttonCancel;
+
     private EditText inputTitle;
     private EditText inputProblem;
     private Spinner spinnerStatus;
@@ -44,12 +43,15 @@ public class CreateTicketController extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.single_ticket);
 
+        Button buttonCreate;
+        Button buttonCancel;
+
         //Zurückpfeil unsichtbar machen, da er in dieser View keinen Sinn macht
         ImageView back_arrow = findViewById(R.id.back_arrow);
         back_arrow.setVisibility(View.INVISIBLE);
 
         //Text vom Titel anpassen
-        TextView title = (TextView) findViewById(R.id.viewCaption);
+        TextView title = findViewById(R.id.viewCaption);
         title.setText(R.string.createTicket);
 
         //Intent auf das Haus setzen
@@ -127,7 +129,7 @@ public class CreateTicketController extends AppCompatActivity {
                             Toast.LENGTH_LONG).show();
                 } else {
                     //Lokale HashMap zur Speicherung der eingegebenen Daten
-                    HashMap<String, String> ticketDataMap = LayoutUtils.getStaticContent(inputTitle, inputProblem, CreateTicketController.this);
+                    HashMap<String, String> ticketDataMap = LayoutUtils.getStaticContent(inputTitle, inputProblem);
 
                     //ausgewählten Status herausfinden und die korrespondierende StatusID speichern
                     String statID = LayoutUtils.getStatus(spinnerStatus, statusList);
