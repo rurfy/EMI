@@ -1,17 +1,14 @@
-package com.example.emi.model;
+package com.pupus.emi.model;
 
 import android.content.Context;
 import android.util.Log;
 import android.widget.Toast;
 
-import com.example.emi.controller.CreateTicketController;
-import com.example.emi.controller.JSONUtils;
 import com.loopj.android.http.*;
 
 import org.json.*;
 
 import java.io.UnsupportedEncodingException;
-import java.util.HashMap;
 
 import cz.msebera.android.httpclient.Header;
 import cz.msebera.android.httpclient.entity.StringEntity;
@@ -28,7 +25,10 @@ public class RestUtils {
 
             //Es können insgesamt 4 Methoden genutzt werden
             //Neben onSuccess() sind das onStart(), onFailure() und onRetry()
-            //Gebenenfalls muss das FailureHandling noch implementiert werden
+            //onStart() würde beim Start des Abrufs ausgeführt werden
+            //onSucces() wird bei einer funktionierenden Verbindung ausgeführt
+            //onFailure wird ausgeführt, wenn die Verbindung fehlschlägt
+            //onRetry() wird ausgeführt, wenn der Verbindungsversuch wiederholt wird
 
             @Override
             public void onStart() {

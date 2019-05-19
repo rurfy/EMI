@@ -1,4 +1,4 @@
-package com.example.emi.controller;
+package com.pupus.emi.controller;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -10,7 +10,7 @@ import java.util.Iterator;
 
 //Diese Klasse enthält universale Konvertierungswerkzeuge
 //Hier werden JSONArrays in ArrayLists umgewandelt, etc.
-public class JSONUtils {
+class JSONUtils {
 
     //Eine gesamte ArrayList<HashMap> aus einem JSONArray erstellen
     public static ArrayList<HashMap<String, String>> jsonToArrayListHash(JSONArray jsonArray) {
@@ -27,6 +27,7 @@ public class JSONUtils {
 
     }
 
+    //Eine gesamte ArrayList<String> aus einem JSONArray erstellen
     public static ArrayList<String> jsonToArrayListString(JSONArray jsonArray, String attribute) {
 
         ArrayList<String> arrayList = new ArrayList<>();
@@ -44,8 +45,8 @@ public class JSONUtils {
 
     }
 
-    //Eine einzige Hashmap vom Typ !!!Ticket!!! aus einem JSONObject erstellen
-    public static HashMap<String, String> jsonObjectToHashMap(JSONObject jsonObject) {
+    //Eine HashMap<String, String> aus einem JSONObject erstellen
+    private static HashMap<String, String> jsonObjectToHashMap(JSONObject jsonObject) {
         HashMap<String, String> hashMap = new HashMap<>();
 
         Iterator jsonIterator = jsonObject.keys();
@@ -63,6 +64,7 @@ public class JSONUtils {
         return hashMap;
     }
 
+    //Eine HashMap<String, String> aus einem JSONArray erstellen
     public static HashMap<String, String> jsonArraytoHashMap (JSONArray jsonArray) {
         HashMap <String, String> hashMap = new HashMap<>();
 
@@ -79,13 +81,12 @@ public class JSONUtils {
         return hashMap;
     }
 
+    //Ein JSONObject aus einer HashMap<String, String> erstellen
     public static JSONObject prepareDataForPost(HashMap<String,String> hashMap) {
         JSONObject jsonParams = new JSONObject();
         try {
             jsonParams.put("Typ", "INSERT");
-            Iterator mapIterator = hashMap.keySet().iterator();
-            while(mapIterator.hasNext()) {
-                String key = (String)mapIterator.next();
+            for (String key : hashMap.keySet()) {
                 String value = hashMap.get(key);
                 jsonParams.put(key, value);
             }
@@ -95,6 +96,7 @@ public class JSONUtils {
         return jsonParams;
     }
 
+    //Ein JSONArray aus einer ArrayList<String> erstellen
     public static JSONArray stringArrayToJsonArray(ArrayList<String> categories) {
         JSONArray array = new JSONArray();
         for (String category: categories) {

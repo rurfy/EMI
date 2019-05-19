@@ -1,7 +1,6 @@
-package com.example.emi.model;
+package com.pupus.emi.model;
 
 import org.json.JSONArray;
-import org.json.JSONObject;
 
 //Interface dient zur besseren Bedienung der REST-GET-Requests
 //Durch Implementierung in eine Klasse kann ein JSONObject oder JSONArray erhalten werden

@@ -1,4 +1,4 @@
-package com.example.emi.controller;
+package com.pupus.emi.controller;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -16,38 +16,41 @@ import android.widget.ListView;
 import android.widget.SimpleAdapter;
 import android.widget.TextView;
 
-import com.example.emi.R;
-import com.example.emi.model.OnJSONResponseCallback;
-import com.example.emi.model.RestUtils;
+import com.pupus.emi.R;
+import com.pupus.emi.model.OnJSONResponseCallback;
+import com.pupus.emi.model.RestUtils;
 
 import org.json.JSONArray;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Objects;
 
 public class AllTicketsController extends AppCompatActivity {
 
-    ArrayList<HashMap<String, String>> list;
-    ListView lvAllTickets;
-    ListAdapter adapter;
-    EditText search;
+    private ArrayList<HashMap<String, String>> list;
+    private ListView lvAllTickets;
+    private ListAdapter adapter;
+    private EditText search;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.all_tickets);
 
+        //ListView initialisieren
+        lvAllTickets = findViewById(R.id.ticketList);
+
         //Zurückpfeil unsichtbar machen, da er in dieser View keinen Sinn macht
-        lvAllTickets = (ListView) findViewById(R.id.ticketList);
         ImageView back_arrow = findViewById(R.id.back_arrow);
         back_arrow.setVisibility(View.INVISIBLE);
 
         //Text vom Titel anpassen
-        TextView title = (TextView) findViewById(R.id.viewCaption);
+        TextView title = findViewById(R.id.viewCaption);
         title.setText(R.string.allTickets);
 
         //Suchleiste iniatilisieren
-        search = (EditText) findViewById(R.id.searchText);
+        search = findViewById(R.id.searchText);
 
         //Intent auf das Haus setzen
         ImageView house = findViewById(R.id.home);
@@ -64,7 +67,7 @@ public class AllTicketsController extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Intent toShowTicket = new Intent(AllTicketsController.this, ShowTicketController.class);
-                toShowTicket.putExtra("key", Integer.parseInt(list.get(position).get("ID")));
+                toShowTicket.putExtra("key", Integer.parseInt(Objects.requireNonNull(list.get(position).get("ID"))));
                 startActivity(toShowTicket);
             }
         });
@@ -95,12 +98,12 @@ public class AllTicketsController extends AppCompatActivity {
                         }
 
                         //der Status wird initailisiert
-                        TextView label = (TextView) row.findViewById(R.id.itemStatus);
+                        TextView label = row.findViewById(R.id.itemStatus);
 
                         //je nach ID erhält der Status eine andere Farbe
-                        if (list.get(position).get("StatusID").equals("10")) {
+                        if (Objects.requireNonNull(list.get(position).get("StatusID")).equals("10")) {
                             label.setBackgroundResource(R.drawable.circle_red);
-                        } else if (list.get(position).get("StatusID").equals("50")) {
+                        } else if (Objects.requireNonNull(list.get(position).get("StatusID")).equals("50")) {
                             label.setBackgroundResource(R.drawable.circle_yellow);
                         } else {
                             label.setBackgroundResource(R.drawable.circle_green);

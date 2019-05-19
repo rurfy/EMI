@@ -1,4 +1,4 @@
-package com.example.emi.controller;
+package com.pupus.emi.controller;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -8,17 +8,16 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.emi.model.OnJSONResponseCallback;
-import com.example.emi.view.LayoutUtils;
-import com.example.emi.model.APIConnector;
-import com.example.emi.model.RestUtils;
-import com.example.emi.R;
-import com.loopj.android.http.JsonHttpResponseHandler;
+import com.pupus.emi.model.OnJSONResponseCallback;
+import com.pupus.emi.view.LayoutUtils;
+import com.pupus.emi.model.RestUtils;
+import com.pupus.emi.R;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -27,33 +26,53 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import cz.msebera.android.httpclient.Header;
-
 public class CreateTicketController extends AppCompatActivity {
 
-    Button buttonCreate;
-    Button buttonCancel;
-    EditText inputTitle;
-    EditText inputCreator;
-    EditText inputProblem;
-    TextView textViewStatus;
-    Spinner spinnerStatus;
-    LinearLayout checkBoxContainer;
 
-    ArrayList<HashMap<String, String>> statusList;
-    HashMap<String, String> categoryMap;
-    ArrayList<CheckBox> checkers;
+    private EditText inputTitle;
+    private EditText inputProblem;
+    private Spinner spinnerStatus;
+    private LinearLayout checkBoxContainer;
+
+    private ArrayList<HashMap<String, String>> statusList;
+    private HashMap<String, String> categoryMap;
+    private ArrayList<CheckBox> checkers;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.single_ticket);
 
+        Button buttonCreate;
+        Button buttonCancel;
+
+        //Zurückpfeil unsichtbar machen, da er in dieser View keinen Sinn macht
+        ImageView back_arrow = findViewById(R.id.back_arrow);
+        back_arrow.setVisibility(View.INVISIBLE);
+
+        //Text vom Titel anpassen
+        TextView title = findViewById(R.id.viewCaption);
+        title.setText(R.string.createTicket);
+
+        //Intent auf das Haus setzen
+        ImageView house = findViewById(R.id.home);
+        house.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //Nutzerausgabe, dass abgebrochen wurde
+                Toast.makeText(CreateTicketController.this, "Die Erstellung des Tickets wurde abgebrochen",
+                        Toast.LENGTH_LONG).show();
+
+                Intent backToHome = new Intent(CreateTicketController.this, MenuController.class);
+                startActivity(backToHome);
+            }
+        });
+
         //Buttons initialisieren
         buttonCreate = findViewById(R.id.buttonLeft);
         buttonCreate.setText(R.string.ok);
         buttonCancel = findViewById(R.id.buttonRight);
-        buttonCancel.setText(R.string.cancel);
+        buttonCancel.setText(R.string.reset);
 
         // Input Felder mit der xml-Datei verknüpft
         inputTitle = findViewById(R.id.textInputEditTextTitle);
@@ -110,7 +129,7 @@ public class CreateTicketController extends AppCompatActivity {
                             Toast.LENGTH_LONG).show();
                 } else {
                     //Lokale HashMap zur Speicherung der eingegebenen Daten
-                    HashMap<String, String> ticketDataMap = LayoutUtils.getStaticContent(inputTitle, inputProblem, CreateTicketController.this);
+                    HashMap<String, String> ticketDataMap = LayoutUtils.getStaticContent(inputTitle, inputProblem);
 
                     //ausgewählten Status herausfinden und die korrespondierende StatusID speichern
                     String statID = LayoutUtils.getStatus(spinnerStatus, statusList);
@@ -168,12 +187,9 @@ public class CreateTicketController extends AppCompatActivity {
 
                 checkBoxContainer.setSelected(false);
 
-                //Nutzerausgabe, dass abgebrochen wurde
-                Toast.makeText(CreateTicketController.this, "Die Erstellung des Tickets wurde abgebrochen",
-                        Toast.LENGTH_LONG).show();
-
             }
         });
+
     }
 
 

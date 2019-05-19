@@ -2,7 +2,6 @@
 <android.support.constraint.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -80,6 +79,7 @@
         app:layout_constraintTop_toTopOf="@+id/date_caption" />
 
     <EditText
+        android:autofillHints="Suchbegriff"
         android:id="@+id/searchText"
         android:layout_width="256dp"
         android:layout_height="wrap_content"

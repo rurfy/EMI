@@ -1,4 +1,4 @@
-package com.example.emi.controller;
+package com.pupus.emi.controller;
 
 import android.content.Context;
 import android.content.Intent;
@@ -9,14 +9,16 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.emi.model.OnJSONResponseCallback;
-import com.example.emi.model.RestUtils;
-import com.example.emi.view.LayoutUtils;
-import com.example.emi.R;
+import com.pupus.emi.model.OnJSONResponseCallback;
+import com.pupus.emi.model.RestUtils;
+import com.pupus.emi.view.LayoutUtils;
+import com.pupus.emi.R;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -28,18 +30,15 @@ import java.util.HashMap;
 
 public class EditTicketController extends AppCompatActivity {
 
-    Button buttonCreate;
-    Button buttonCancel;
-    EditText inputTitle;
-    EditText inputCreator;
-    EditText inputProblem;
-    Spinner spinnerStatus;
-    LinearLayout checkBoxContainer;
-    ArrayList<Integer> ticketId = new ArrayList<>();
-    ArrayList<CheckBox> checkBoxesCategories = new ArrayList<>();
-    ArrayList<HashMap<String, String>> statusList = new ArrayList<>();
-    ArrayList<String> catID = new ArrayList<>();
-    Context context;
+    private EditText inputTitle;
+    private EditText inputProblem;
+    private Spinner spinnerStatus;
+    private LinearLayout checkBoxContainer;
+    private final ArrayList<Integer> ticketId = new ArrayList<>();
+    private ArrayList<CheckBox> checkBoxesCategories = new ArrayList<>();
+    private ArrayList<HashMap<String, String>> statusList = new ArrayList<>();
+    private ArrayList<String> catID = new ArrayList<>();
+    private Context context;
 
 
     @Override
@@ -47,12 +46,33 @@ public class EditTicketController extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.single_ticket);
 
+        Button buttonCreate;
+        Button buttonCancel;
+
         Bundle b = getIntent().getExtras();
         if (b != null) {
             ticketId.add(0, b.getInt("key"));
         } else {
             Log.e("FehlerID", "keine ID eingetragen");
         }
+
+        //Zurückpfeil unsichtbar machen, da er in dieser View keinen Sinn macht
+        ImageView back_arrow = findViewById(R.id.back_arrow);
+        back_arrow.setVisibility(View.INVISIBLE);
+
+        //Text vom Titel anpassen
+        TextView title = findViewById(R.id.viewCaption);
+        title.setText(R.string.editTicket);
+
+        //Intent auf das Haus setzen
+        ImageView house = findViewById(R.id.home);
+        house.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent backToHome = new Intent(EditTicketController.this, MenuController.class);
+                startActivity(backToHome);
+            }
+        });
 
         context = EditTicketController.this;
 
@@ -161,7 +181,7 @@ public class EditTicketController extends AppCompatActivity {
                             Toast.LENGTH_LONG).show();
                 } else {
                     //Lokale HashMap zur Speicherung der eingegebenen Daten
-                    HashMap<String, String> ticketDataMap = LayoutUtils.getStaticContent(inputTitle, inputProblem, EditTicketController.this);
+                    HashMap<String, String> ticketDataMap = LayoutUtils.getStaticContent(inputTitle, inputProblem);
 
                     //ausgewählten Status herausfinden und die korrespondierende StatusID speichern
                     String statID = LayoutUtils.getStatus(spinnerStatus, statusList);
@@ -194,7 +214,7 @@ public class EditTicketController extends AppCompatActivity {
                                 postObject.put("TicketID", ticketId.get(0));
                                 postObject.put ("KategorieID", JSONUtils.stringArrayToJsonArray(catID));
                             } catch (JSONException e) {
-
+                                e.printStackTrace();
 
                             }
                             // Updaten der Kategorien eines Tickets
