@@ -30,13 +30,11 @@ import java.util.HashMap;
 
 public class EditTicketController extends AppCompatActivity {
 
-    private Button buttonCreate;
-    private Button buttonCancel;
     private EditText inputTitle;
     private EditText inputProblem;
     private Spinner spinnerStatus;
     private LinearLayout checkBoxContainer;
-    private ArrayList<Integer> ticketId = new ArrayList<>();
+    private final ArrayList<Integer> ticketId = new ArrayList<>();
     private ArrayList<CheckBox> checkBoxesCategories = new ArrayList<>();
     private ArrayList<HashMap<String, String>> statusList = new ArrayList<>();
     private ArrayList<String> catID = new ArrayList<>();
@@ -47,6 +45,9 @@ public class EditTicketController extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.single_ticket);
+
+        Button buttonCreate;
+        Button buttonCancel;
 
         Bundle b = getIntent().getExtras();
         if (b != null) {
@@ -60,7 +61,7 @@ public class EditTicketController extends AppCompatActivity {
         back_arrow.setVisibility(View.INVISIBLE);
 
         //Text vom Titel anpassen
-        TextView title = (TextView) findViewById(R.id.viewCaption);
+        TextView title = findViewById(R.id.viewCaption);
         title.setText(R.string.editTicket);
 
         //Intent auf das Haus setzen
@@ -180,7 +181,7 @@ public class EditTicketController extends AppCompatActivity {
                             Toast.LENGTH_LONG).show();
                 } else {
                     //Lokale HashMap zur Speicherung der eingegebenen Daten
-                    HashMap<String, String> ticketDataMap = LayoutUtils.getStaticContent(inputTitle, inputProblem, EditTicketController.this);
+                    HashMap<String, String> ticketDataMap = LayoutUtils.getStaticContent(inputTitle, inputProblem);
 
                     //ausgewählten Status herausfinden und die korrespondierende StatusID speichern
                     String statID = LayoutUtils.getStatus(spinnerStatus, statusList);

@@ -10,7 +10,7 @@ import java.util.Iterator;
 
 //Diese Klasse enthält universale Konvertierungswerkzeuge
 //Hier werden JSONArrays in ArrayLists umgewandelt, etc.
-public class JSONUtils {
+class JSONUtils {
 
     //Eine gesamte ArrayList<HashMap> aus einem JSONArray erstellen
     public static ArrayList<HashMap<String, String>> jsonToArrayListHash(JSONArray jsonArray) {
@@ -46,7 +46,7 @@ public class JSONUtils {
     }
 
     //Eine HashMap<String, String> aus einem JSONObject erstellen
-    public static HashMap<String, String> jsonObjectToHashMap(JSONObject jsonObject) {
+    private static HashMap<String, String> jsonObjectToHashMap(JSONObject jsonObject) {
         HashMap<String, String> hashMap = new HashMap<>();
 
         Iterator jsonIterator = jsonObject.keys();
@@ -86,9 +86,7 @@ public class JSONUtils {
         JSONObject jsonParams = new JSONObject();
         try {
             jsonParams.put("Typ", "INSERT");
-            Iterator mapIterator = hashMap.keySet().iterator();
-            while(mapIterator.hasNext()) {
-                String key = (String)mapIterator.next();
+            for (String key : hashMap.keySet()) {
                 String value = hashMap.get(key);
                 jsonParams.put(key, value);
             }

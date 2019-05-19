@@ -79,6 +79,7 @@
         app:layout_constraintTop_toTopOf="@+id/date_caption" />
 
     <EditText
+        android:autofillHints="Suchbegriff"
         android:id="@+id/searchText"
         android:layout_width="256dp"
         android:layout_height="wrap_content"

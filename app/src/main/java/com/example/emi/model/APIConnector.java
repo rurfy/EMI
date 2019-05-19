@@ -6,10 +6,10 @@ import com.loopj.android.http.*;
 
 import cz.msebera.android.httpclient.entity.StringEntity;
 
-public class APIConnector {
+class APIConnector {
     private static final String BASE_URL = "https://steffen.cloud/api/";
 
-    private static AsyncHttpClient client = new AsyncHttpClient();
+    private static final AsyncHttpClient client = new AsyncHttpClient();
 
     public static void get(String url, RequestParams params, AsyncHttpResponseHandler responseHandler) {
         client.get(getAbsoluteUrl(url), params, responseHandler);

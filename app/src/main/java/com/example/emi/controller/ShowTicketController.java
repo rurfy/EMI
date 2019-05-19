@@ -27,13 +27,11 @@ import java.util.HashMap;
 
 public class ShowTicketController extends AppCompatActivity {
 
-    private Button buttonEdit;
-    private Button buttonBack;
     private EditText inputTitle;
     private EditText inputProblem;
     private TextView textViewStatus;
     private LinearLayout categorieLayout;
-    private ArrayList<Integer> ticketId = new ArrayList<>();
+    private final ArrayList<Integer> ticketId = new ArrayList<>();
     private Context context;
 
 
@@ -42,12 +40,15 @@ public class ShowTicketController extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.single_ticket);
 
+        Button buttonEdit;
+        Button buttonBack;
+
         //Zurückpfeil unsichtbar machen, da er in dieser View keinen Sinn macht
         ImageView back_arrow = findViewById(R.id.back_arrow);
         back_arrow.setVisibility(View.INVISIBLE);
 
         //Text vom Titel anpassen
-        TextView title = (TextView) findViewById(R.id.viewCaption);
+        TextView title = findViewById(R.id.viewCaption);
         title.setText("");
 
         //Intent auf das Haus setzen
@@ -166,6 +167,7 @@ public class ShowTicketController extends AppCompatActivity {
             // Wechseln zur View für die Anzeige aller Tickets, wenn keine TicketID übergeben wurde
             Toast.makeText(ShowTicketController.this, "Fehler bei der Übertragung der ID", Toast.LENGTH_LONG).show();
             Intent toAllTicketsPage = new Intent(ShowTicketController.this, AllTicketsController.class);
+            assert b != null;
             b.putInt("Error", 1);
             toAllTicketsPage.putExtras(b);
             startActivity(toAllTicketsPage);

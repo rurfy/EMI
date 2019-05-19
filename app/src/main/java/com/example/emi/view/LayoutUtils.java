@@ -16,10 +16,10 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Objects;
 
 public class LayoutUtils {
 
@@ -61,7 +61,7 @@ public class LayoutUtils {
     // Verwendung: ShowTicketController
     public static void setStatus(TextView textViewStatus, HashMap<String, String> ticketDataMap) {
 
-        switch (Integer.parseInt(ticketDataMap.get("StatusID"))) {
+        switch (Integer.parseInt(Objects.requireNonNull(ticketDataMap.get("StatusID")))) {
             case 10: {
                 textViewStatus.setBackgroundResource(R.drawable.circle_red);
                 break;
@@ -89,12 +89,13 @@ public class LayoutUtils {
         String status = "";
         // Zuordnen der StatusID zu einem Status
         for (int i = 0; i < statusList.size(); i++) {
-            if (ticketDataMap.get("StatusID").equals(statusList.get(i).get("ID"))) {
+            if (Objects.requireNonNull(ticketDataMap.get("StatusID")).equals(statusList.get(i).get("ID"))) {
                 status = statusList.get(i).get("Bezeichnung");
             }
         }
 
         // Auswählen des Statuses aus der DropDownListe
+        @SuppressWarnings("unchecked")
         ArrayAdapter<String> adapter = (ArrayAdapter<String>) spinnerStatus.getAdapter();
         int pos = adapter.getPosition(status);
         spinnerStatus.setSelection(pos);
@@ -110,14 +111,12 @@ public class LayoutUtils {
 
         // Erstellen einer ChaeckBox für jede Kategorie
         int i = 0;
-        Iterator it = categoriesHashMap.entrySet().iterator();
-        while (it.hasNext()) {
+        for (Map.Entry<String, String> stringStringEntry : categoriesHashMap.entrySet()) {
 
-            Map.Entry pair = (Map.Entry) it.next();
             CheckBox checkBox = new CheckBox(context);
-            checkBox.setId(Integer.parseInt(pair.getKey().toString()));
-            checkBox.setText(pair.getValue().toString());
-            checkBox.setTag(pair.getValue().toString());
+            checkBox.setId(Integer.parseInt(((Map.Entry) stringStringEntry).getKey().toString()));
+            checkBox.setText(((Map.Entry) stringStringEntry).getValue().toString());
+            checkBox.setTag(((Map.Entry) stringStringEntry).getValue().toString());
 
             // Dient später dem Auslesen der Werte der Buttons, wir an getSelectedCategories() in der onClick() weitergegeben
             checkBoxesAllCategories.add(i, checkBox);
@@ -137,17 +136,15 @@ public class LayoutUtils {
 
         // Erstellen einer ChaeckBox für jede Kategorie
         int i = 0;
-        Iterator it = categoriesHashMap.entrySet().iterator();
-        while (it.hasNext()) {
-            Map.Entry pair = (Map.Entry) it.next();
+        for (Map.Entry<String, String> stringStringEntry : categoriesHashMap.entrySet()) {
             CheckBox checkBox = new CheckBox(context);
-            checkBox.setId(Integer.parseInt(pair.getKey().toString()));
-            checkBox.setText(pair.getValue().toString());
-            checkBox.setTag(pair.getValue().toString());
+            checkBox.setId(Integer.parseInt(((Map.Entry) stringStringEntry).getKey().toString()));
+            checkBox.setText(((Map.Entry) stringStringEntry).getValue().toString());
+            checkBox.setTag(((Map.Entry) stringStringEntry).getValue().toString());
 
             // Abfragen, ob das Ticket diese Kategorie enhält, wenn ja wird ein Häckchen gesetzt
             for (int j = 0; j < selectedCategories.size(); j++) {
-                if (pair.getKey().toString().equals(selectedCategories.get(j))) {
+                if (((Map.Entry) stringStringEntry).getKey().toString().equals(selectedCategories.get(j))) {
                     checkBox.setChecked(true);
                 }
             }
@@ -193,7 +190,7 @@ public class LayoutUtils {
 
     // Holt die vom User eingegebenen Werte aus den InputFeldern (Titel, Problembeschreibung)
     // Verwendung: EditTicketController, CreateTicketController
-    public static HashMap<String, String> getStaticContent(EditText inputTitle, EditText inputProblem, Context context) {
+    public static HashMap<String, String> getStaticContent(EditText inputTitle, EditText inputProblem) {
 
         HashMap<String, String> ticketDataMap = new HashMap<>();
 
