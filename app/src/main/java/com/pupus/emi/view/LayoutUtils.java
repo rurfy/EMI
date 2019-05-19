@@ -1,4 +1,4 @@
-package com.example.emi.view;
+package com.pupus.emi.view;
 
 import android.content.Context;
 import android.graphics.Color;
@@ -10,7 +10,7 @@ import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 
-import com.example.emi.R;
+import com.pupus.emi.R;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;

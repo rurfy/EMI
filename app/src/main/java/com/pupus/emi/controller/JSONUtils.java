@@ -1,4 +1,4 @@
-package com.example.emi.controller;
+package com.pupus.emi.controller;
 
 import org.json.JSONArray;
 import org.json.JSONException;

@@ -1,4 +1,4 @@
-package com.example.emi.model;
+package com.pupus.emi.model;
 
 import org.json.JSONArray;
 

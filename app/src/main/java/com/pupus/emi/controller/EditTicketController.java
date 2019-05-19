@@ -1,4 +1,4 @@
-package com.example.emi.controller;
+package com.pupus.emi.controller;
 
 import android.content.Context;
 import android.content.Intent;
@@ -15,10 +15,10 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.emi.model.OnJSONResponseCallback;
-import com.example.emi.model.RestUtils;
-import com.example.emi.view.LayoutUtils;
-import com.example.emi.R;
+import com.pupus.emi.model.OnJSONResponseCallback;
+import com.pupus.emi.model.RestUtils;
+import com.pupus.emi.view.LayoutUtils;
+import com.pupus.emi.R;
 
 import org.json.JSONArray;
 import org.json.JSONException;

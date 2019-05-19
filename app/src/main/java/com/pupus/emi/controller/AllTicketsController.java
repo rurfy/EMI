@@ -1,4 +1,4 @@
-package com.example.emi.controller;
+package com.pupus.emi.controller;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -16,9 +16,9 @@ import android.widget.ListView;
 import android.widget.SimpleAdapter;
 import android.widget.TextView;
 
-import com.example.emi.R;
-import com.example.emi.model.OnJSONResponseCallback;
-import com.example.emi.model.RestUtils;
+import com.pupus.emi.R;
+import com.pupus.emi.model.OnJSONResponseCallback;
+import com.pupus.emi.model.RestUtils;
 
 import org.json.JSONArray;
 

@@ -1,4 +1,4 @@
-package com.example.emi.controller;
+package com.pupus.emi.controller;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -8,7 +8,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.example.emi.R;
+import com.pupus.emi.R;
 
 public class MenuController extends AppCompatActivity {
 
